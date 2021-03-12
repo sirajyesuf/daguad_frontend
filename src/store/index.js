@@ -14,10 +14,11 @@ Vue.use(Vuex)
  * with the Store instance.
  */
 
+import user from './user.js'
 export default function (/* { ssrContext } */) {
   const Store = new Vuex.Store({
     modules: {
-      // example
+      user
     },
 
     // enable strict mode (adds overhead!)
