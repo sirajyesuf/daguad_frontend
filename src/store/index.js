@@ -15,10 +15,22 @@ Vue.use(Vuex)
  */
 
 import user from './user.js'
+import channel from './channel.js'
+// import campaignpackage from './campaignpackage.js'
+// import channelcategory from './channelcategory.js'
+import campaign from './campaign.js'
+// import common from './common.js'
+// import payment from './payment.js'
 export default function (/* { ssrContext } */) {
   const Store = new Vuex.Store({
     modules: {
-      user
+      user,
+      channel,
+      campaign
+      // campaignpackage,
+      // channelcategory,
+      // common,
+      // payment
     },
 
     // enable strict mode (adds overhead!)

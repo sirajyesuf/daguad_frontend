@@ -20,20 +20,13 @@
         <q-separator dark inset />
 
         <q-card-section>
-          <form class="q-px-sm q-pt-xl q-pb-lg" @submit="submit">
-            <q-input
-              ref="name"
-              square
-              clearable
-              v-model="newuser.name"
-              type="name"
-              label="Name"
-              :rules="[(val) => !!val || 'the name field is required']"
+          <form class="q-px-sm q-pt-xl q-pb-lg" @submit.prevent="submit">
+            <text-input
+              ref="fullname"
+              :name.sync="newuser.name"
+              @clearname="clearname"
             >
-              <template v-slot:prepend>
-                <q-icon name="person" />
-              </template>
-            </q-input>
+            </text-input>
 
             <email-input
               ref="email_input"
@@ -75,11 +68,12 @@
                 label="Forgot your password?"
               />
             </q-card-actions>
-
-            <!-- <pre class="text-red">
+            <!-- 
+            <pre class="text-red">
             {{ newuser }}
             {{ servererrors }}
-          </pre> -->
+          </pre -->
+            >
           </form>
         </q-card-section>
       </q-card>
@@ -95,7 +89,7 @@ export default {
       loading: false,
       newuser: {
         email: 'siraj@gmail.com',
-        name: 'sunny',
+        name: 'siraj yesuf',
         password: '123456'
       },
       servererrors: {
@@ -110,10 +104,10 @@ export default {
     ...mapActions('user', ['signup']),
     submit() {
       this.$refs.email_input.$refs.email.validate()
-      this.$refs.name.validate()
+      this.$refs.fullname.$refs.textinput.validate()
       this.$refs.password_input.$refs.password.validate()
       if (
-        this.$refs.name.hasError ||
+        this.$refs.fullname.$refs.textinput.hasError ||
         this.$refs.email_input.$refs.email.hasError ||
         this.$refs.password_input.$refs.password.hasError
       ) {
@@ -138,8 +132,11 @@ export default {
     },
     clear() {
       this.servererrors.email.err = false
-      this.servererrors.email.msg = ''
-      this.newuser.email = ''
+      this.servererrors.email.msg = null
+      this.newuser.email = null
+    },
+    clearname() {
+      this.newuser.fullname = null
     }
   },
   computed: {},
@@ -147,6 +144,8 @@ export default {
     'email-input': require('components/account/common/EmailInputField.vue')
       .default,
     'password-input': require('components/account/common/PasswordInputField.vue')
+      .default,
+    'text-input': require('components/account/common/TextInputField.vue')
       .default
   }
 }

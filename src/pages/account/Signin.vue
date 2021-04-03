@@ -100,7 +100,8 @@ export default {
           this.signin(this.login)
             .then((res) => {
               this.loading = false
-              this.$router.push({ path: '/dashboard' })
+              const redirectpath = this.$route.query.redirect || '/dashboard'
+              this.$router.push(redirectpath)
             })
             .catch((err) => {
               if (err.response.status === 401) {

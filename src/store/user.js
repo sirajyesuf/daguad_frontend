@@ -1,9 +1,9 @@
 import { Promise } from 'core-js'
-import { instance } from '../api.js'
+import { api } from 'boot/axios.js'
 const state = {
-  loading: false,
-  key: null || localStorage.getItem('daguad_key'),
-  user: null
+  key: localStorage.getItem('daguad_key') || null,
+  user: null,
+  dashboard_info: null
 }
 
 const mutations = {
@@ -16,37 +16,41 @@ const mutations = {
   },
   signin(state, user) {
     state.user = user
-    localStorage.setItem('daguad_key', 'hello_world')
-    console.log('final state', state.user, state.key)
+    localStorage.setItem('daguad_key', user.email)
+    state.key = localStorage.getItem('daguad_key') || null
+  },
+  signout(state) {
+    state.key = null
+    localStorage.removeItem('daguad_key')
+    state.user = null
+  },
+  dashboardinfo(state, payload) {
+    state.dashboard_info = payload
   }
 }
 
 const actions = {
   signup(context, user) {
     return new Promise((resolve, reject) => {
-      instance.get('/sanctum/csrf-cookie').then((response) => {
-        instance
-          .post('/api/auth/register', user)
-          .then((res) => {
-            console.log('signup action', res)
-            context.commit('signup', res.data)
-            resolve(res)
-          })
-          .catch((err) => {
-            if (err.response) {
-              reject(err)
-            }
-          })
-      })
+      api
+        .post('/auth/register', user)
+        .then((res) => {
+          context.commit('signup', res.data)
+          resolve(res)
+        })
+        .catch((err) => {
+          if (err.response) {
+            reject(err)
+          }
+        })
     })
   },
   signin(context, creadentials) {
     return new Promise((resolve, reject) => {
-      instance.get('/sanctum/csrf-cookie').then((response) => {
-        instance
-          .post('api/auth/login', creadentials)
+      api.get('/csrf-cookie').then((res) => {
+        api
+          .post('/auth/login', creadentials)
           .then((res) => {
-            console.log('signin res.data', res.data)
             context.commit('signin', res.data)
             resolve(res)
           })
@@ -57,10 +61,9 @@ const actions = {
     })
   },
   forgotpassword(context, email) {
-    // console.log(email)
     return new Promise((resolve, reject) => {
-      instance.get('/sanctum/csrf-cookie').then((response) => {
-        instance
+      api.get('/sanctum/csrf-cookie').then((res) => {
+        api
           .post('api/auth/forgot_password', { email })
           .then((res) => {
             resolve(res)
@@ -72,25 +75,53 @@ const actions = {
     })
   },
   resetpassword(context, payload) {
-    console.log('reset payload', payload)
-
     return new Promise((resolve, reject) => {
-      instance.get('/sanctum/csrf-cookie').then((response) => {
-        instance
-          .post('api/auth/reset_password', payload)
-          .then((res) => resolve(res))
-          .catch((err) => reject(err))
-      })
+      api
+        .post('api/auth/reset_password', payload)
+        .then((res) => resolve(res))
+        .catch((err) => reject(err))
     })
+  },
+  signout(context) {
+    return new Promise((resolve, reject) => {
+      api
+        .post('/logout')
+        .then((res) => {
+          context.commit('signout')
+          resolve(res)
+        })
+
+        .catch((err) => {
+          reject(err)
+        })
+    })
+  },
+  dashboardinfo(context) {
+    const payload = [
+      { title: 'channels', number: 100 },
+      { title: 'compaign', numbe: 30 },
+      { title: 'active_channel', number: 488 },
+      { title: 'total_earning', number: 399 }
+    ]
+    setTimeout(() => {
+      context.commit('dashbordinfo', payload)
+    }, 5000)
+    return payload
   }
 }
 
 const getters = {
-  loading(state) {
-    return state.loading
+  dashboardinfo() {
+    return state.dashboardinfo
   },
   user(state) {
     return state.user
+  },
+  isauth(state) {
+    if (state.key) {
+      return 1
+    }
+    return 0
   }
 }
 

@@ -1,19 +1,47 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
+  <q-layout view="hhr LpR fff">
+    <q-header class="bg-white">
       <q-toolbar>
         <q-btn
+          color="primary"
           flat
           dense
           round
-          icon="menu"
+          :icon="icon"
           aria-label="Menu"
           @click="leftDrawerOpen = !leftDrawerOpen"
         />
 
-        <q-toolbar-title> Quasar App </q-toolbar-title>
+        <q-toolbar-title class="text-primary"> DaguAd </q-toolbar-title>
 
-        <div>Quasar v{{ $q.version }}</div>
+        <div>
+          <q-btn
+            dense
+            flat
+            round
+            icon="notifications"
+            class="q-ml-md text-black"
+          >
+            <q-badge color="red" floating>4</q-badge>
+          </q-btn>
+          <q-btn-dropdown flat class="q-mx-sm" color="green">
+            <q-list>
+              <q-item clickable v-ripple v-close-popup>
+                <q-item-section avatar>
+                  <q-icon name="settings" color="green"></q-icon>
+                </q-item-section>
+                <q-item-section> Settings </q-item-section>
+              </q-item>
+
+              <q-item clickable @click="signout1">
+                <q-item-section avatar>
+                  <q-icon color="red" name="logout" />
+                </q-item-section>
+                <q-item-section> SignOut </q-item-section>
+              </q-item>
+            </q-list>
+          </q-btn-dropdown>
+        </div>
       </q-toolbar>
     </q-header>
 
@@ -21,12 +49,10 @@
       v-model="leftDrawerOpen"
       show-if-above
       bordered
-      content-class="bg-grey-1"
+      content-class="bg-white"
     >
       <q-list>
-        <q-item-label header class="text-grey-8">
-          Essential Links
-        </q-item-label>
+        <q-item-label header class="text-grey-8"> John Doe </q-item-label>
         <EssentialLink
           v-for="link in essentialLinks"
           :key="link.title"
@@ -35,57 +61,37 @@
       </q-list>
     </q-drawer>
 
-    <q-page-container>
-      <router-view />
+    <q-page-container class="xxxxx">
+      <q-page class="q-ma-xl">
+        <div class="q-pa-md q-gutter-sm bg-white w3-code">
+          <router-view />
+        </div>
+      </q-page>
     </q-page-container>
   </q-layout>
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 import EssentialLink from 'components/EssentialLink.vue'
 
 const linksData = [
   {
-    title: 'Docs',
-    caption: 'quasar.dev',
+    title: 'Channels',
+    caption: 'add channel here',
     icon: 'school',
-    link: 'https://quasar.dev'
+    link: '/dashboard/channels'
   },
   {
-    title: 'Github',
-    caption: 'github.com/quasarframework',
+    title: 'Campaign',
+    caption: 'publishe promotion here',
     icon: 'code',
-    link: 'https://github.com/quasarframework'
+    link: '/dashboard/campaign'
   },
   {
-    title: 'Discord Chat Channel',
-    caption: 'chat.quasar.dev',
-    icon: 'chat',
-    link: 'https://chat.quasar.dev'
-  },
-  {
-    title: 'Forum',
-    caption: 'forum.quasar.dev',
-    icon: 'record_voice_over',
-    link: 'https://forum.quasar.dev'
-  },
-  {
-    title: 'Twitter',
-    caption: '@quasarframework',
-    icon: 'rss_feed',
-    link: 'https://twitter.quasar.dev'
-  },
-  {
-    title: 'Facebook',
-    caption: '@QuasarFramework',
-    icon: 'public',
-    link: 'https://facebook.quasar.dev'
-  },
-  {
-    title: 'Quasar Awesome',
-    caption: 'Community Quasar projects',
-    icon: 'favorite',
-    link: 'https://awesome.quasar.dev'
+    title: 'Report',
+    caption: 'publishe promotion here',
+    icon: 'analytics'
   }
 ]
 
@@ -97,6 +103,45 @@ export default {
       leftDrawerOpen: false,
       essentialLinks: linksData
     }
+  },
+  methods: {
+    ...mapActions('user', ['signout']),
+    signout1() {
+      return new Promise((resolve) => {
+        this.signout()
+          .then((res) => {
+            this.$router.push({ path: '/' })
+          })
+          .catch((err) => {
+            console.log('signout err', err)
+          })
+      })
+    }
+  },
+  computed: {
+    icon() {
+      if (this.leftDrawerOpen) {
+        return 'arrow_forward'
+      } else {
+        return 'arrow_back'
+      }
+    }
   }
 }
 </script>
+<style scoped>
+.xxxxx {
+  background-color: #f1f1f1;
+  padding: 0.01em 16px;
+  margin: 0px 0;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12) !important;
+}
+
+.w3-code {
+  width: auto;
+  background-color: #fff;
+  padding: 8px 12px;
+  border-left: 4px solid #4caf50;
+  word-wrap: break-word;
+}
+</style>

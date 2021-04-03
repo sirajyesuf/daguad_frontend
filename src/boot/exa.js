@@ -1,5 +1,5 @@
 // import something here
-import { instance } from '../api.js'
+import { api } from 'boot/axios.js'
 import { Notify } from 'quasar'
 
 // "async" is optional;
@@ -15,18 +15,12 @@ export default async ({ app, router, store, Vue }) => {
       } else {
         next()
       }
-    } else if (to.matched.some((record) => record.meta.guest)) {
-      if (user()) {
-        next({ name: from.name })
-      } else {
-        next()
-      }
     } else {
       next()
     }
   })
 
-  instance.interceptors.request.use(
+  api.interceptors.request.use(
     function (config) {
       // store.commit('user/updateloading', true)
       return config
@@ -37,10 +31,13 @@ export default async ({ app, router, store, Vue }) => {
       if (error.request.status === 419) {
         console.log('request error with 419')
       }
+      if (error.request.status === 401) {
+        console.log('request error with 401')
+      }
       return Promise.reject(error)
     }
   )
-  instance.interceptors.response.use(
+  api.interceptors.response.use(
     function (response) {
       // store.commit('user/updateloading', false)
       return response
@@ -49,11 +46,10 @@ export default async ({ app, router, store, Vue }) => {
       // Any status codes that falls outside the range of 2xx cause this function to trigger
       // Do something with response error
       // console.log('err', error.response.status)
-      // const status = error.response.status
-      // if (status === 422) {
-      //   console.log('validation errrr')
-      //   store.commit('user/updateloading', false)
-      // }
+      const status = error.response.status
+      if (status === 401) {
+        console.log('unauthorize')
+      }
       if (status === 500) {
         store.commit('user/updateloading', false)
         Notify.create({
