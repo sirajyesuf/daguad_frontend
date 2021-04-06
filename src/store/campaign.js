@@ -1,28 +1,16 @@
 import { api } from 'boot/axios.js'
+import { Date } from 'core-js'
 const state = {
-  pagination: {
-    first: null,
-    last: null,
-    next: null,
-    prev: null
-  },
+  days: [],
   campaigns: [],
   newcampaign: {
     photos: [],
     message: '',
-    starting_date:
-      new Date().getFullYear() +
-      '/' +
-      (new Date().getMonth() + 1) +
-      '/' +
-      new Date().getDate()
-  },
-  history: {
-    day: null,
-    starting_date: null,
-    number_of_day: null,
-    days: [],
-    posts: []
+    starting_date: new Date().toLocaleDateString('fr-CA', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
+    })
   }
 }
 
@@ -34,13 +22,6 @@ const mutations = {
     state.pagination.prev = payload.prev_page_url
   },
   fetchCampaigns(state, payload) {
-    // state.campaigns = []
-    // payload.forEach((campaign) => {
-    //   campaign.image_path = JSON.parse(campaign.image_path)
-    //   Object.assign(campaign, { editing: false })
-    //   state.campaigns.push(campaign)
-    // })
-
     state.campaigns = payload
   },
   updateNewCampaign(state, payload) {
@@ -61,38 +42,20 @@ const mutations = {
     }
   },
   addcampaign(state, campaign) {
-    state.push(campaign)
+    state.campaigns(campaign)
   },
-  day(state, payload) {
-    state.history.day = payload
-  },
-  fetchcampaignhistory(state, payload) {
-    state.history.days = []
-    state.history.starting_date = new Date(
-      payload.starting_date
-    ).toLocaleDateString('fr-CA', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit'
-    })
-    state.history.days.push(state.history.starting_date)
-    state.history.number_of_day = payload.number_of_day
-    state.history.posts = payload.posts
-
-    for (var i = 1; i < payload.number_of_day; i++) {
-      console.log('looooooooooooooooo')
-      var a = new Date(state.history.days[0])
-      a = a.setDate(a.getDate() + i)
-      state.history.days.push(
-        new Date(a).toLocaleDateString('fr-CA', {
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit'
-        })
-      )
-      console.log(a)
+  showCampaign(state, campaign) {
+    console.log('cam', campaign)
+    const x = state.campaigns.find((element) => element.id === campaign.id)
+    console.log('x', x)
+    if (!x) state.campaigns.push(campaign)
+    var firstDate = new Date(campaign.starting_date)
+    state.days.push(firstDate.toLocaleDateString())
+    for (let i = 1; i < campaign.package.number_of_days; i++) {
+      const v = new Date(state.days[0])
+      const x = v.setDate(v.getDate() + i)
+      state.days.push(new Date(x).toLocaleDateString())
     }
-    state.history.day = state.history.days[0]
   }
 }
 
@@ -101,31 +64,29 @@ const actions = {
     return new Promise(() => {
       api.get('/campaigns/list_of_user_campaign').then((res) => {
         console.log('campaigns', res)
-        // const urls = {
-        //   first_page_url: res.data.first_page_url,
-        //   last_page_url: res.data.last_page_url,
-        //   next_page_url: res.data.next_page_url,
-        //   prev_page_url: res.data.prev_page_url
-        // }
-        // context.commit('pagination', urls)
         context.commit('fetchCampaigns', res.data)
       })
     })
   },
   addcampaign(context, payload) {
-    return new Promise(() => {
-      api.post('/promotions/add_promotion', payload).then((res) => {
-        console.log(res)
-      })
+    return new Promise((resolve, reject) => {
+      api
+        .post('/campaigns/add_campaign', payload)
+        .then((res) => {
+          context.commit('addcampaign', res.data)
+          resolve(res)
+        })
+        .catch((err) => {
+          reject(err)
+        })
     })
   },
-  fetchcampaignhistory(context, payload) {
-    var url = '/promotions/list_of_advert_post/' + payload.campaignId
-    if (payload.date) url = url + '?date=' + payload.date
-    return new Promise(() => {
-      api.get(url).then((res) => {
-        console.log('historty', res.data.data)
-        context.commit('fetchcampaignhistory', res.data.data)
+  showCampaign(context, campaignId) {
+    return new Promise((resolve) => {
+      api.get('campaigns/' + campaignId).then((res) => {
+        console.log(res.data)
+        context.commit('showCampaign', res.data)
+        resolve(res)
       })
     })
   }
@@ -134,6 +95,18 @@ const actions = {
 const getters = {
   campaigns(state) {
     return state.campaigns
+  },
+  campaign(state) {
+    return (campaignId) => {
+      return state.campaigns.forEach((element) => {
+        if (element.id === campaignId) {
+          return element
+        }
+      })
+    }
+  },
+  days(state) {
+    return state.days
   }
 }
 

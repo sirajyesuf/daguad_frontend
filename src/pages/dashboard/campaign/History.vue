@@ -1,93 +1,100 @@
 <template>
-  <div>
-    <template>
-      <div class="row">
-        <div class="col-8 q-mt-xl">
-          <q-markup-table flat>
-            <thead>
-              <tr>
-                <th class="text-right">Channel</th>
-                <th class="text-right">View</th>
-                <th class="text-right">Date</th>
-                <th class="text-right">Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="post in history.posts" :key="post.id">
-                <td class="text-right">
-                  <a
-                    :href="`https://t.me/${post.channel_username}/${post.message_id}`"
-                  >
-                    tikvah Ethiopia</a
-                  >
-                </td>
-                <td class="text-right">1000</td>
-                <td class="text-right">24/3/09</td>
-                <td class="text-right">active</td>
-              </tr>
-            </tbody>
-          </q-markup-table>
-        </div>
-        <q-space></q-space>
-        <div class="col-3 q-mb-xl" style="max-width: 300px">
-          <q-select
-            outlined
-            v-model="day"
-            :options="history.days"
-            @input="selectedchange"
-            label="filter by date"
-            class="text-primary"
-          />
-        </div>
-      </div>
-    </template>
+  <div v-if="!loading" class="column">
+    <div class="col">
+      <q-select
+        outlined
+        style="width: 200px"
+        v-model="day"
+        :options="days"
+        label="filter by date"
+        class="text-primary float-right"
+      />
+    </div>
+    <div class="col">
+      <q-markup-table flat>
+        <thead>
+          <tr>
+            <th class="text-left">Channel</th>
+            <th class="text-right">View</th>
+            <th class="text-right">Date</th>
+            <th class="text-right">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <template v-if="posts.length">
+            <tr v-for="post in posts" :key="post.key">
+              <td class="text-left">
+                <a
+                  :href="`https://t.me/${post.channel.username}/${post.message_id}`"
+                >
+                  {{ post.channel.name }}</a
+                >
+              </td>
+              <td class="text-right">{{ post.view }}</td>
+              <td class="text-right">
+                {{ new Date(post.posted_date).toLocaleDateString() }}
+              </td>
+              <td class="text-right">{{ post.active_status }}</td>
+            </tr>
+          </template>
+          <template v-else>
+            <span>Empty</span>
+          </template>
+        </tbody>
+      </q-markup-table>
+    </div>
   </div>
 </template>
 
 <script>
-import { mapState } from 'vuex'
 export default {
   data() {
     return {
-      campaignId: this.$route.params.id,
-      day: ''
+      days: [],
+      day: null,
+      campaign: null,
+      loading: false
     }
   },
-  created() {
-    const payload = {
-      campaignId: this.campaignId
-    }
-    this.$store.dispatch('campaign/fetchcampaignhistory', payload)
+  async created() {
+    await this.fetchCampaing()
   },
   methods: {
-    selectedchange(val) {
-      console.log('ccccccccc', val)
-      const payload = {
-        campaignId: this.campaignId,
-        date: val
+    async fetchCampaing() {
+      this.loading = true
+      await this.$api
+        .get(`campaigns/${this.$route.params.id}`)
+        .then(({ data }) => {
+          this.campaign = data
+          this.getfilterdays()
+        })
+        .finally(() => (this.loading = false))
+    },
+    getfilterdays() {
+      this.days.push('All')
+      this.day = 'All'
+
+      const startingDate = new Date(this.campaign.starting_date)
+      this.days.push(startingDate.toLocaleDateString())
+
+      const length = this.campaign.package.number_of_days
+
+      for (let i = 1; i < length; i++) {
+        this.days.push(
+          new Date(
+            startingDate.setDate(startingDate.getDate() + i)
+          ).toLocaleDateString()
+        )
       }
-      console.log(payload)
-      this.$store.dispatch('campaign/fetchcampaignhistory', payload)
     }
   },
   computed: {
-    ...mapState('campaign', ['history'])
-    // day1: {
-    //   get() {
-    //     return this.$store.state.campaign.history.day[0]
-    //   },
-    //   set(val) {
-    //     console.log(val)
-    //     this.$store.commit('campaign/day', val)
-
-    //     const payload = {
-    //       campaignId: this.campaignId,
-    //       date: val
-    //     }
-    //     console.log(payload)
-    //     this.$store.dispatch('campaign/fetchcampaignhistory', payload)
-    //   }
-    // }
+    posts() {
+      if (this.day === 'All') return this.campaign.posts
+      return this.campaign.posts.filter((post) => {
+        return this.day === new Date(post.posted_date).toLocaleDateString()
+      })
+    }
   }
 }
 </script>
@@ -96,3 +103,5 @@ export default {
   overflow: auto;
 }
 </style>
+
+// 'fr-CA', { // year: 'numeric', // month: '2-digit', // day: '2-digit' // }

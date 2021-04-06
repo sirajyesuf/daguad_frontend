@@ -3,6 +3,9 @@
     <campaign-form
       :photos.sync="photos"
       :message.sync="message"
+      :starting_date.sync="starting_date"
+      @submit="submit"
+      @changetobase64="getbase64photos"
     ></campaign-form>
     <!-- <q-form @submit.prevent="submit">
       <q-stepper
@@ -79,17 +82,17 @@
         </q-step>
         <q-step
           :name="3"
-          title="Categories"
+          title="Catagories"
           icon="build"
-          :done="selectedcategories.length > 0 ? true : false"
+          :done="selectedcatagories.length > 0 ? true : false"
         >
           <div class="row">
             <div
               class="col-sm-6 col-md-4"
-              v-for="category in categories.slice(0, seemore_category)"
+              v-for="category in catgories.slice(0, seemore_category)"
               :key="category.title"
             >
-               <p>{{ selectedcategories }}</p>
+               <p>{{ selectedcatagories }}</p>
     <category-selection-step
                 :category="category"
                 @categoryselected="categoryselected"
@@ -97,7 +100,7 @@
             </div>
           </div>
           <q-btn
-            v-show="seemore_category !== categories.length"
+            v-show="seemore_category !== catagories.length"
             flat
             color="primary"
             label="see more"
@@ -116,10 +119,10 @@
             @packageselected="packageselected"
           >
           </package-list>
-          <div v-if="!displayPackage && selectedcategories.length !== 0">
+          <div v-if="!displayPackage && selectedcatagories.length !== 0">
             no package
           </div>
-          <div v-if="selectedcategories.length === 0" class="q-ma-mb">
+          <div v-if="selectedcatagories.length === 0" class="q-ma-mb">
             Lorem ipsum dolor sit, amet consectetur adipisicing elit. Reiciendis
             possimus laboriosampackages animi fuga, dolorum sequi quisquam porro
             voluptatibus labore at iste? Aliquid rem, quis dolorum nam officiis
@@ -173,20 +176,17 @@ export default {
     }
   },
   watch: {
-    selectedcategories: {
-      handler(newval, oldval) {
-        console.log('newvalue and oldvalue', newval, oldval)
-        if (this.selectedcategories.length > 0) {
-          this.$store.dispatch(
-            'campaignpackage/fetchpackage',
-            this.selectedcategories
-          )
-        } else {
-          this.$store.commit('campaignpackage/emptypackages')
-        }
-      },
-      deep: true
-    },
+    // selectedcatagories: {
+    //   handler(newval, oldval) {
+    //     console.log('newvalue and oldvalue', newval, oldval)
+    //     if (this.selectedcatagories.length > 0) {
+    //       this.$store.dispatch('packages/fetchpackage', this.selectedcatagories)
+    //     } else {
+    //       this.$store.commit('packages/emptypackages')
+    //     }
+    //   },
+    //   deep: true
+    // },
     step(newval, oldval) {
       if (newval === 2) {
         this.getbase64photos()
@@ -194,7 +194,7 @@ export default {
     }
   },
   created() {
-    this.$store.dispatch('channelcategory/getCategories')
+    this.$store.dispatch('catagory/getCatagories')
   },
   methods: {
     onrejected(rejectentries) {
@@ -226,8 +226,10 @@ export default {
         package_id: this.selected_package,
         starting_date: this.starting_date
       }
-      this.$store.dispatch('campaign/addcampaign', x)
-      this.$router.push({ name: 'campaign_payment', params: { id: 1 } })
+      this.$store.dispatch('campaign/addcampaign', x).then((res) => {
+        this.$router.push({ name: 'campaign_payment', params: { id: 1 } })
+      })
+      // .catch((err) => {})
     },
     stepchange(wht) {
       if (wht === 'add') {
@@ -238,7 +240,7 @@ export default {
       }
     },
     categoryselected(categoryId) {
-      this.$store.commit('channelcategory/selectCategory', categoryId)
+      this.$store.commit('category/selectCatagory', categoryId)
     },
 
     packageselected(dayname, packageId) {
@@ -246,7 +248,7 @@ export default {
         dayname: dayname,
         packageid: packageId
       }
-      this.$store.commit('campaignpackage/selectedPackage', payload)
+      this.$store.commit('packages/selectedPackage', payload)
     },
     getbase64photos() {
       this.base64photos = []
@@ -259,7 +261,7 @@ export default {
       })
     },
     uploadedphotos() {
-      console.log(this.base64photos)
+      console.log('base64', this.base64photos)
       if (this.base64photos.length === 2) {
         return {
           image_1: this.base64photos[0],
@@ -287,10 +289,10 @@ export default {
   },
   computed: {
     ...mapState('campaign', ['campaigns', 'newcampaign']),
-    ...mapState('channelcategory', ['categories', 'selectedcategories']),
-    ...mapState('campaignpackage', ['selected_package', 'days', 'packages']),
-    ...mapGetters('channelcategory', ['ischannelcategoryselected']),
-    ...mapGetters('campaignpackage', ['getselectedpackage']),
+    ...mapState('catagory', ['catagories', 'selectedcatagories']),
+    ...mapState('packages', ['selected_package', 'days', 'packages']),
+    ...mapGetters('catagory', ['ischannelcatagoryselected']),
+    ...mapGetters('packages', ['getselectedpackage']),
     photos: {
       get() {
         return this.$store.state.campaign.newcampaign.photos

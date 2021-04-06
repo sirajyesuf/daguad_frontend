@@ -20,7 +20,7 @@
               transition-hide="flip-down"
             >
               <q-card class="fixed-center my-card">
-                <img src="props.row.images[0].path" />
+                <img />
 
                 <q-card-section>
                   <div class="text-h6">Our Changing Planet</div>

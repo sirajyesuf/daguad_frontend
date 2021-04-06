@@ -84,7 +84,14 @@
               dense
               @click="deleteChannel(channel.id)"
             />
-            <q-btn color="positive" icon-right="details" no-caps flat dense />
+            <q-btn
+              color="positive"
+              icon-right="details"
+              no-caps
+              flat
+              dense
+              :to="{ name: 'channel_post_history', params: { id: channel.id } }"
+            />
           </td>
         </tr>
       </tbody>

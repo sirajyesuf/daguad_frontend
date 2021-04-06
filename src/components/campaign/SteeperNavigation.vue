@@ -2,7 +2,7 @@
   <q-stepper-navigation>
     <q-btn
       flat
-      @click="$emit('stepchange', 'add')"
+      @click="nextBtn"
       color="primary"
       label="Next"
       v-if="step <= 4"
@@ -20,6 +20,12 @@
 </template>
 <script>
 export default {
-  props: ['step']
+  props: ['step'],
+  methods: {
+    nextBtn() {
+      this.$emit('stepchange', 'add')
+      this.$emit('formvalidation')
+    }
+  }
 }
 </script>

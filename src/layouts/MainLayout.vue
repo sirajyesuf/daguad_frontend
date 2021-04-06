@@ -92,6 +92,12 @@ const linksData = [
     title: 'Report',
     caption: 'publishe promotion here',
     icon: 'analytics'
+  },
+  {
+    title: 'Earning',
+    caption: 'publishe promotion here',
+    icon: 'account_balance_wallet',
+    link: '/dashboard/channels/earning'
   }
 ]
 

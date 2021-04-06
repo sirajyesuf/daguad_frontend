@@ -46,18 +46,18 @@ const mutations = {
   }
 }
 const actions = {
-  fetchpackage(context, payload) {
+  fetchpackage(context, selectedCatagories) {
     return new Promise(() => {
       api
-        .get('promotions/packages', {
+        .get('campaigns/packages', {
           params: {
-            catagory_id: payload
+            catagory_id: selectedCatagories
           }
         })
         .then((res) => {
           var payload = res.data
           for (const [key, value] of Object.entries(payload)) {
-            console.log(key)
+            console.log('day=>', key)
             value.forEach((pack) => {
               Object.assign(pack, { selected: false })
             })

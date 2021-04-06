@@ -35,7 +35,22 @@ const routes = [
       },
       {
         path: 'channels',
-        component: () => import('pages/dashboard/channels/Index.vue')
+        component: () => import('layouts/ChannelMainLayout.vue'),
+        children: [
+          {
+            path: '',
+            component: () => import('pages/dashboard/channels/Index.vue')
+          },
+          {
+            path: 'post_history/:id',
+            component: () => import('pages/dashboard/channels/History.vue'),
+            name: 'channel_post_history'
+          },
+          {
+            path: 'earning',
+            component: () => import('pages/dashboard/channels/Earning.vue')
+          }
+        ]
       },
       {
         path: 'campaign',

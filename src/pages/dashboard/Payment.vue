@@ -23,7 +23,7 @@
     <div class="q-mt-xl">
       <div class="q-ma-md select-paymet">
         <p class="text-center q-pa-md text-black text-weight-bold">
-          pay ETB {{ campaign.total_amount }} only.
+          pay ETB {{ campaign.package.total_amount }} only.
         </p>
       </div>
       <div v-if="selected_payment_method" class="q-ma-xl" id="content">
@@ -77,32 +77,35 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from 'vuex'
+import { mapGetters } from 'vuex'
 export default {
   data() {
     return {
       error: false,
       error_message: '',
-      tn: ''
+      tn: '',
+      campaign: null
     }
   },
-  created() {
-    // get the campaign detail
-    this.$store.dispatch('payment/campaign', this.$route.params.id)
-    // the payment detail
-    this.$store.dispatch('payment/paymentmethod')
+  async created() {
+    this.fetchcampaign()
   },
 
   methods: {
+    async fetchcampaign() {
+      await this.$api.get(`campaigns/${this.$route.params.id}`).then((res) => {
+        this.campaign = res.data
+      })
+      await this.$store.dispatch('payment/paymentmethod')
+    },
     selectedpaymet(paymetId) {
-      console.log(paymetId)
       this.$store.commit('payment/selectedpaymet', paymetId)
     },
     submit() {
       const payload = {
         payment_method_id: this.selected_payment_method.id,
-        ref_or_phone: Number(this.tn),
-        advert_id: this.$store.state.payment.campaign.id
+        ref_or_phone: this.tn,
+        advert_id: this.campaign.id
       }
       this.$store
         .dispatch('payment/paymentverification', payload)
@@ -124,14 +127,7 @@ export default {
     }
   },
   computed: {
-    ...mapState('payment', ['campaign']),
-    ...mapGetters('payment', ['selected_payment_method']),
-    campaign() {
-      return this.$store.state.payment.campaign
-    },
-    paymentmethods() {
-      return this.$store.state.payment.paymentmethods
-    }
+    ...mapGetters('payment', ['selected_payment_method', 'paymentmethods'])
   }
 }
 </script>

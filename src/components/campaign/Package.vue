@@ -59,7 +59,7 @@ export default {
     }
   },
   created() {
-    this.tab = this.days[0].name
+    if (this.days.length > 0) this.tab = this.days[0].name
   },
   methods: {
     selectedtab(name) {

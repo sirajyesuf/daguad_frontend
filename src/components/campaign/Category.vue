@@ -4,15 +4,15 @@
       <q-item tag="label" v-ripple>
         <q-item-section side top>
           <q-checkbox
-            :value="category.selected"
-            @input="$emit('categoryselected', category.id)"
+            :value="catagory.selected"
+            @input="$emit('catagoryselected', catagory.id)"
           />
         </q-item-section>
 
         <q-item-section>
-          <q-item-label>{{ category.name }}</q-item-label>
+          <q-item-label>{{ catagory.name }}</q-item-label>
           <q-item-label caption>
-            {{ category.description }}
+            {{ catagory.description }}
           </q-item-label>
         </q-item-section>
       </q-item>
@@ -21,7 +21,7 @@
 </template>
 <script>
 export default {
-  props: ['category'],
+  props: ['catagory'],
   data() {
     return {
       ch: false
