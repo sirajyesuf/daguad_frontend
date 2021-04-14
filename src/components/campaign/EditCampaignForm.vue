@@ -15,16 +15,19 @@
         icon="insert_photo"
         :done="photos.length === 0 ? false : true"
       >
+        {{ max_number_photos }}
         <q-file
+          v-if="this.photos.length + this.newphotos.length < 2"
           name="photo"
           dense
-          :value="photos"
+          :value="newphotos"
           @input="atphotoupload"
           outlined
           counter
           multiple
+          append
           use-chips
-          max-files="2"
+          :max-files="max_number_photos"
           accept="image/*"
           max-total-size="4000000"
           @rejected="onrejected"
@@ -38,6 +41,47 @@
             <q-icon name="attach_file" />
           </template>
         </q-file>
+        <div class="row q-pt-xl">
+          <q-img
+            class="col-6 q-ma-md"
+            :src="photo.path"
+            spinner-color="red"
+            style="height: 140px; max-width: 150px"
+            v-for="(photo, index) in photos"
+            :key="index"
+          >
+            <q-badge color="transparent" floating>
+              <q-icon
+                clickable
+                @click="removePhoto(index)"
+                name="cancel"
+                color="white"
+                class="q-ma-none"
+                size="20px"
+              />
+            </q-badge>
+          </q-img>
+          <q-img
+            class="col-6 q-ma-md"
+            :src="getphoto(newphoto)"
+            spinner-color="red"
+            style="height: 140px; max-width: 150px"
+            v-for="(newphoto, index) in newphotos"
+            :key="1 + index"
+          >
+            <q-badge color="transparent" floating>
+              <q-icon
+                clickable
+                @click="removeNewPhoto(index)"
+                name="cancel"
+                color="white"
+                class="q-ma-none"
+                size="20px"
+              />
+            </q-badge>
+          </q-img>
+        </div>
+
         <steeper-navigation
           :step="step"
           @stepchange="stepchange"
@@ -77,19 +121,13 @@
           @stepchange="stepchange"
         ></steeper-navigation>
       </q-step>
-      <q-step
-        :name="3"
-        title="Catagories"
-        icon="build"
-        :done="selectedcatagories.length > 0 ? true : false"
-      >
+      <q-step :name="3" title="Catagories" icon="build">
         <div class="row">
           <div
             class="col-sm-6 col-md-4"
             v-for="catagory in catagories.slice(0, seemore_catagory)"
             :key="catagory.title"
           >
-            <p>{{ selectedcatagories }}</p>
             <category-selection-step
               :catagory="catagory"
               @catagoryselected="catagoryselected"
@@ -109,16 +147,15 @@
         ></steeper-navigation>
       </q-step>
 
-      <q-step :name="4" title="Package" icon="add" :done="!!selected_package">
-        {{ selected_package }}
+      <q-step :name="4" title="Package" icon="add">
         <package-list
-          v-if="displayPackage"
           :days="days"
           :packages="packages"
           @packageselected="packageselected"
         >
         </package-list>
-        <div v-if="!displayPackage() && selectedcatagories.length !== 0">
+
+        <!-- <div v-if="!displayPackage() && selectedcatagories.length !== 0">
           zero packages please select another catagories.
         </div>
         <div v-if="selectedcatagories.length === 0" class="q-ma-mb">
@@ -126,7 +163,7 @@
           possimus laboriosampackages animi fuga, dolorum sequi quisquam porro
           voluptatibus labore at iste? Aliquid rem, quis dolorum nam officiis in
           mollitia est.
-        </div>
+        </div> -->
 
         <steeper-navigation
           :step="step"
@@ -172,10 +209,19 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
 import dateAfterNow from '../../helper/validators.js'
 export default {
-  props: ['photos', 'message', 'starting_date'],
+  props: [
+    'photos',
+    'message',
+    'starting_date',
+    'catagories',
+    'packages',
+    'days',
+    'selected_package',
+    'selectedcatagories',
+    'newphotos'
+  ],
   data() {
     return {
       tab: null,
@@ -207,7 +253,8 @@ export default {
       return !!value || '*required'
     },
     atphotoupload($event) {
-      this.$emit('update:photos', $event)
+      console.log('hh', $event)
+      this.$emit('update:newphotos', $event)
       this.$emit('changetobase64')
     },
     onrejected(rejectentries) {
@@ -239,12 +286,32 @@ export default {
         dayname: dayname,
         packageid: packageId
       }
-      this.$store.commit('packages/selectedPackage', payload)
+      this.$emit('selectedpackage', payload)
+    },
+    removePhoto(index) {
+      console.log('Emitted...')
+      this.$root.$emit('delete:photo', index)
+    },
+    removeNewPhoto(index) {
+      this.$emit('removeNewPhoto', index)
+    },
+    getphoto(val) {
+      return URL.createObjectURL(val)
     }
   },
+
   computed: {
-    ...mapState('catagory', ['catagories', 'selectedcatagories']),
-    ...mapState('packages', ['selected_package', 'days', 'packages'])
+    max_number_photos() {
+      console.log('photos length', this.photos.length)
+      console.log('newphotos length', this.newphotos.length)
+      const numphotos = this.photos.length
+      let rtn = 0
+      if (numphotos === 0) rtn = 2
+      if (numphotos === 1) rtn = 1
+      if (numphotos === 2) rtn = 0
+
+      return rtn
+    }
   },
   components: {
     'package-list': require('components/campaign/Package.vue').default,
@@ -255,3 +322,12 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.q-img__content > div {
+  position: absolute;
+  padding: 6px;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.47);
+}
+</style>

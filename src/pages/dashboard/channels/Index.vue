@@ -1,35 +1,12 @@
 <template>
   <div>
-    <div class="q-my-md">
-      <q-form @submit.prevent="submit">
-        <div class="row q-gutter-x-md">
-          <div class="col-8">
-            <q-input
-              ref="channel_username"
-              clearable
-              dense
-              outlined
-              v-model="username"
-              :loading="loading"
-              @input="atinput"
-              :rules="[
-                (val) => !!val || 'the channel username field is required'
-              ]"
-              :error="error"
-              :error-message="error_message"
-            ></q-input>
-          </div>
-          <div class="col">
-            <q-btn label="Submit" type="submit" class="q-mx-md" color="primary">
-              <template v-slot:loading>
-                <q-spinner-facebook />
-              </template>
-            </q-btn>
-          </div>
-        </div>
-      </q-form>
-    </div>
-
+    <q-btn
+      color="orange"
+      push
+      icon-right="add"
+      label="Add Channel"
+      :to="{ name: 'add_channel' }"
+    />
     <q-markup-table flat>
       <thead>
         <tr>

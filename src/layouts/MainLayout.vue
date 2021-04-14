@@ -72,7 +72,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 import EssentialLink from 'components/EssentialLink.vue'
 
 const linksData = [
@@ -98,6 +98,12 @@ const linksData = [
     caption: 'publishe promotion here',
     icon: 'account_balance_wallet',
     link: '/dashboard/channels/earning'
+  },
+  {
+    title: 'Payment',
+    caption: 'publishe promotion here',
+    icon: 'account_balance_wallet',
+    link: '/dashboard/payment'
   }
 ]
 
@@ -125,6 +131,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters('common', ['loading']),
     icon() {
       if (this.leftDrawerOpen) {
         return 'arrow_forward'

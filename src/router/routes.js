@@ -25,7 +25,6 @@ const routes = [
   },
   {
     path: '/dashboard',
-    name: 'dashboard',
     component: () => import('layouts/MainLayout.vue'),
     meta: { auth: true },
     children: [
@@ -40,6 +39,11 @@ const routes = [
           {
             path: '',
             component: () => import('pages/dashboard/channels/Index.vue')
+          },
+          {
+            path: 'addchannel',
+            name: 'add_channel',
+            component: () => import('pages/dashboard/channels/AddChannel.vue')
           },
           {
             path: 'post_history/:id',
@@ -62,7 +66,12 @@ const routes = [
           },
           {
             path: 'new_campaign',
-            component: () => import('pages/dashboard/campaign/NewCampaign.vue')
+            component: () => import('pages/dashboard/campaign/AddCampaign.vue')
+          },
+          {
+            path: 'edit_campaign/:id',
+            name: 'edit_campaign',
+            component: () => import('pages/dashboard/campaign/EditCampaign.vue')
           },
           {
             path: 'campaign_history/:id',
@@ -72,7 +81,7 @@ const routes = [
           {
             path: 'payment/:id',
             name: 'campaign_payment',
-            component: () => import('pages/dashboard/Payment.vue')
+            component: () => import('src/pages/dashboard/campaign/Payment.vue')
           }
         ]
       },
@@ -80,6 +89,11 @@ const routes = [
         path: 'settings',
         name: 'settings',
         component: () => import('pages/dashboard/Settings.vue')
+      },
+      {
+        path: 'payment',
+        name: 'payment',
+        component: () => import('src/pages/dashboard/PaymentHistory.vue')
       }
     ]
   },

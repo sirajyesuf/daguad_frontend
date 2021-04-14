@@ -2,16 +2,7 @@ import { api } from 'boot/axios.js'
 import { Date } from 'core-js'
 const state = {
   days: [],
-  campaigns: [],
-  newcampaign: {
-    photos: [],
-    message: '',
-    starting_date: new Date().toLocaleDateString('fr-CA', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit'
-    })
-  }
+  campaigns: []
 }
 
 const mutations = {
@@ -63,7 +54,6 @@ const actions = {
   fetchCampaigns(context) {
     return new Promise(() => {
       api.get('/campaigns/list_of_user_campaign').then((res) => {
-        console.log('campaigns', res)
         context.commit('fetchCampaigns', res.data)
       })
     })

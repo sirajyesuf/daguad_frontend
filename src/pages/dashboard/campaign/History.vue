@@ -29,12 +29,20 @@
                 >
                   {{ post.channel.name }}</a
                 >
+                <q-skeleton v-if="loading" animation="blink" type="text" />
               </td>
-              <td class="text-right">{{ post.view }}</td>
+              <td class="text-right">
+                {{ post.view }}
+                <q-skeleton v-if="loading" animation="blink" type="text" />
+              </td>
               <td class="text-right">
                 {{ new Date(post.posted_date).toLocaleDateString() }}
+                <q-skeleton v-if="loading" animation="blink" type="text" />
               </td>
-              <td class="text-right">{{ post.active_status }}</td>
+              <td class="text-right">
+                {{ post.active_status }}
+                <q-skeleton v-if="loading" animation="blink" type="text" />
+              </td>
             </tr>
           </template>
           <template v-else>

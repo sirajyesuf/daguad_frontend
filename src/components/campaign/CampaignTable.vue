@@ -20,7 +20,10 @@
               transition-hide="flip-down"
             >
               <q-card class="fixed-center my-card">
-                <img />
+                <img
+                  v-if="props.row.images.length > 0"
+                  :src="props.row.images[0].path"
+                />
 
                 <q-card-section>
                   <div class="text-h6">Our Changing Planet</div>
@@ -74,7 +77,14 @@
           </q-td>
           <q-td key="action" :props="props">
             <q-btn color="negative" icon-right="delete" no-caps flat dense />
-            <q-btn color="positive" icon-right="edit" no-caps flat dense />
+            <q-btn
+              color="positive"
+              icon-right="edit"
+              no-caps
+              flat
+              dense
+              :to="{ name: 'edit_campaign', params: { id: props.row.id } }"
+            />
             <q-btn
               color="positive"
               icon-right="details"

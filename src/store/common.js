@@ -4,11 +4,15 @@ const state = {
 
 const mutations = {
   updateLoading(state) {
-    state.loading = !state.loading
+    state.loading = true
   }
 }
 const actions = {}
-const getters = {}
+const getters = {
+  loading(state) {
+    return state.loading
+  }
+}
 export default {
   namespaced: true,
   state,

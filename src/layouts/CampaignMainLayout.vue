@@ -5,22 +5,11 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
   computed: {
-    loading: {
-      get() {
-        return this.$store.state.common.loading
-      }
-    }
+    ...mapGetters('common', ['loading'])
   }
 }
 </script>
-<style scoped>
-/* .w3-code {
-  width: auto;
-  background-color: #fff;
-  padding: 8px 12px;
-  border-left: 4px solid #4caf50;
-  word-wrap: break-word;
-} */
-</style>
+<style scoped></style>

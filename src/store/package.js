@@ -9,6 +9,7 @@ const mutations = {
   emptypackages(state) {
     state.packages = []
     state.days = []
+    state.selected_package = 0
   },
   days(state) {
     state.days = []

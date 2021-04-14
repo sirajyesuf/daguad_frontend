@@ -19,7 +19,7 @@ import channel from './channel.js'
 import packages from './package.js'
 import catagory from './catagory.js'
 import campaign from './campaign.js'
-// import common from './common.js'
+import common from './common.js'
 import payment from './payment.js'
 export default function (/* { ssrContext } */) {
   const Store = new Vuex.Store({
@@ -29,7 +29,8 @@ export default function (/* { ssrContext } */) {
       campaign,
       catagory,
       packages,
-      payment
+      payment,
+      common
     },
 
     // enable strict mode (adds overhead!)
