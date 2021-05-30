@@ -15,6 +15,13 @@ const mutations = {
   fetchCampaigns(state, payload) {
     state.campaigns = payload
   },
+  async updateCampaign(state, campaignId) {
+    state.campaigns.forEach((campaign) => {
+      if (campaign.id === campaignId) {
+        campaign.paid_status = true
+      }
+    })
+  },
   updateNewCampaign(state, payload) {
     if (payload.key === 'message') state.newcampaign.message = payload.value
     if (payload.key === 'photos') {
@@ -33,7 +40,7 @@ const mutations = {
     }
   },
   addcampaign(state, campaign) {
-    state.campaigns(campaign)
+    state.campaigns.push(campaign)
   },
   showCampaign(state, campaign) {
     console.log('cam', campaign)
@@ -51,25 +58,13 @@ const mutations = {
 }
 
 const actions = {
-  fetchCampaigns(context) {
-    return new Promise(() => {
-      api.get('/campaigns/list_of_user_campaign').then((res) => {
-        context.commit('fetchCampaigns', res.data)
-      })
-    })
+  async fetchCampaigns({ commit }, url) {
+    const response = await api.get(url)
+    commit('fetchCampaigns', response.data.data)
+    return response
   },
-  addcampaign(context, payload) {
-    return new Promise((resolve, reject) => {
-      api
-        .post('/campaigns/add_campaign', payload)
-        .then((res) => {
-          context.commit('addcampaign', res.data)
-          resolve(res)
-        })
-        .catch((err) => {
-          reject(err)
-        })
-    })
+  async addcampaign(context, payload) {
+    return await api.post('/campaigns/add_campaign', payload)
   },
   showCampaign(context, campaignId) {
     return new Promise((resolve) => {

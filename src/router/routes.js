@@ -38,6 +38,7 @@ const routes = [
         children: [
           {
             path: '',
+            name: 'list_channel',
             component: () => import('pages/dashboard/channels/Index.vue')
           },
           {
@@ -52,6 +53,7 @@ const routes = [
           },
           {
             path: 'earning',
+            name: 'earning',
             component: () => import('pages/dashboard/channels/Earning.vue')
           }
         ]
@@ -62,14 +64,27 @@ const routes = [
         children: [
           {
             path: '',
+            name: 'campaign_list',
             component: () => import('pages/dashboard/campaign/Index.vue')
           },
           {
-            path: 'new_campaign',
+            path: 'create_campaign',
+            name: 'create_campaign',
             component: () => import('pages/dashboard/campaign/AddCampaign.vue')
           },
           {
+            path: 'campaign-detail/:id',
+            name: 'campaign-detail',
+            component: () => import('pages/dashboard/campaign/Detail.vue')
+          },
+          {
             path: 'edit_campaign/:id',
+            name: 'edit_campaign',
+            component: () =>
+              import('pages/dashboard/campaign/neweditcampaign.vue')
+          },
+          {
+            path: 'fuck/:id',
             name: 'edit_campaign',
             component: () => import('pages/dashboard/campaign/EditCampaign.vue')
           },
@@ -79,7 +94,7 @@ const routes = [
             component: () => import('pages/dashboard/campaign/History.vue')
           },
           {
-            path: 'payment/:id',
+            path: 'campaign_payment/:id',
             name: 'campaign_payment',
             component: () => import('src/pages/dashboard/campaign/Payment.vue')
           }
@@ -88,12 +103,17 @@ const routes = [
       {
         path: 'settings',
         name: 'settings',
-        component: () => import('pages/dashboard/Settings.vue')
+        component: () => import('src/pages/dashboard/settings/index.vue')
       },
       {
         path: 'payment',
         name: 'payment',
         component: () => import('src/pages/dashboard/PaymentHistory.vue')
+      },
+      {
+        path: 'notifications',
+        name: 'notifications',
+        component: () => import('src/pages/dashboard/DisplayNotifications.vue')
       }
     ]
   },
@@ -102,12 +122,42 @@ const routes = [
     name: 'wellcome',
     component: () => import('pages/Wellcome.vue')
   },
+  {
+    path: '/landing',
+    component: () => import('layouts/LandingLayout.vue'),
+    children: [
+      {
+        path: '',
+        component: () => import('pages/landingpage.vue')
+      },
+      {
+        path: '/privacypolicy',
+        name: 'privacypolicy',
+        component: () => import('pages/privacypolicy.vue')
+      },
+      {
+        path: '/contactus',
+        name: 'contactus',
+        component: () => import('pages/contactus.vue')
+      }
+    ]
+  },
+  {
+    path: '/500',
+    name: '500',
+    component: () => import('pages/errors/Error500.vue')
+  },
+  {
+    path: '/403',
+    name: '403',
+    component: () => import('pages/errors/Error403.vue')
+  },
 
   // Always leave this as last one,
   // but you can also remove it
   {
     path: '*',
-    component: () => import('pages/Error404.vue')
+    component: () => import('src/pages/errors/Error404.vue')
   }
 ]
 

@@ -1,13 +1,18 @@
 <template>
   <q-stepper-navigation>
     <q-btn
-      flat
-      @click="nextBtn"
+      type="submit"
+      v-if="step == 5"
       color="primary"
-      label="Next"
-      v-if="step <= 4"
-    />
-    <q-btn type="submit" v-if="step == 5" flat color="primary" label="Create" />
+      :label="type !== 'update' ? 'Create Campaign' : 'Update Campaign'"
+      :loading="loading"
+      :no-caps="true"
+    >
+      <template v-slot:loading>
+        <q-spinner-facebook />
+      </template>
+    </q-btn>
+
     <q-btn
       flat
       @click="$emit('stepchange', 'sub')"
@@ -16,11 +21,19 @@
       class="q-ml-sm"
       v-if="step >= 2"
     />
+
+    <q-btn
+      flat
+      @click="nextBtn"
+      color="primary"
+      label="Next"
+      v-if="step <= 4"
+    />
   </q-stepper-navigation>
 </template>
 <script>
 export default {
-  props: ['step'],
+  props: ['step', 'loading', 'type'],
   methods: {
     nextBtn() {
       this.$emit('stepchange', 'add')

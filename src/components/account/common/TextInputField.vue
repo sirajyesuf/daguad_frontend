@@ -21,10 +21,10 @@ export default {
   props: ['name'],
   methods: {
     atinputevent($event) {
-      this.$emit('update:fullname', $event)
+      this.$emit('update:name', $event)
     },
     clear() {
-      this.$emit('clearfullname')
+      this.$emit('clearname')
     }
   }
 }

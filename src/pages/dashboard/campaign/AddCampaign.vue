@@ -1,21 +1,60 @@
 <template>
   <div class="q-pa-md">
+    <q-btn
+      flat
+      :no-caps="true"
+      label="Return To List"
+      color="orange"
+      icon="fas fa-list"
+      :to="{ name: 'campaign_list' }"
+    ></q-btn>
+    <h6 class="text-orange q-mb-xs">
+      <i class="fas fa-ad"></i>
+      Add Campaign
+    </h6>
+    <q-separator color="orange"></q-separator>
     <campaign-form
-      :photos.sync="newcampaign.photos"
       :message.sync="newcampaign.message"
       :starting_date.sync="newcampaign.starting_date"
       @submit="submit"
-      @changetobase64="getbase64photos"
+      @changetobase64="changetobase64"
+      :photo="newcampaign.photo"
+      :base64photo="base64photo"
+      :loading="loading"
     ></campaign-form>
+    <q-btn
+      class="lt-md"
+      style="width: 100%; heigth: 100%"
+      outline
+      label="Preview"
+      :no-caps="true"
+      size="16px"
+      color="orange"
+      @click="dialog = true"
+    ></q-btn>
+    <q-dialog
+      v-model="dialog"
+      :maximized="maximizedToggle"
+      transition-show="slide-up"
+      transition-hide="slide-down"
+    >
+      <add-campaign-preview
+        view="mobile"
+        :message="newcampaign.message"
+        :photo="base64photo"
+      ></add-campaign-preview>
+    </q-dialog>
   </div>
 </template>
 <script>
-import { mapGetters, mapState } from 'vuex'
 export default {
   data() {
     return {
+      dialog: false,
+      maximizedToggle: true,
+      loading: false,
       newcampaign: {
-        photos: [],
+        photo: null,
         message: '',
         starting_date: new Date().toLocaleDateString('fr-CA', {
           year: 'numeric',
@@ -23,118 +62,88 @@ export default {
           day: '2-digit'
         })
       },
-      base64photos: []
+      base64photo: null
     }
   },
 
   created() {
+    this.$store.commit('common/update', false)
+
     this.$store.dispatch('catagory/getCatagories')
   },
   methods: {
-    submit(evt) {
-      console.log('sub', this.newcampaign)
-      const vv = this.uploadedphotos()
-      var x = {
-        ...vv,
-        message: this.newcampaign.message,
-        package_id: this.selected_package,
-        starting_date: this.newcampaign.starting_date
+    async submit(payload) {
+      try {
+        this.loading = true
+        const base64photo = this.uploadedphoto()
+        var x = {
+          ...base64photo,
+          message: this.newcampaign.message,
+          ...payload,
+          starting_date: this.newcampaign.starting_date
+        }
+        const response = await this.$store.dispatch('campaign/addcampaign', x)
+        this.$store.commit('campaign/addcampaign', response.data)
+        await this.$router.push({
+          name: 'campaign_payment',
+          params: { id: response.data.id }
+        })
+        console.log('response', response.data)
+        this.$q.notify({
+          type: 'positive',
+          message: 'the campaign is successfully created.please pay here.'
+        })
+      } catch (error) {
+        console.log('errrrr', error)
+      } finally {
+        setTimeout(() => {
+          this.loading = false
+        }, 4000)
       }
-      this.$store.dispatch('campaign/addcampaign', x).then((res) => {
-        this.$router.push({ name: 'campaign_payment', params: { id: 1 } })
-      })
     },
-    getbase64photos() {
-      this.base64photos = []
-      this.newcampaign.photos.forEach((file) => {
+    changetobase64(photo) {
+      this.newcampaign.photo = photo
+
+      if (photo) {
         const reader = new FileReader()
         reader.onload = (event) => {
-          this.base64photos.push(event.target.result)
+          this.base64photo = event.target.result
         }
-        reader.readAsDataURL(file)
-      })
-    },
-    uploadedphotos() {
-      console.log('base64', this.base64photos)
-      if (this.base64photos.length === 2) {
-        return {
-          image_1: this.base64photos[0],
-          image_2: this.base64photos[1]
-        }
-      }
-      if (this.base64photos.length === 1) {
-        return { image_1: this.base64photos[0] }
+        reader.readAsDataURL(this.newcampaign.photo)
       } else {
-        return null
+        this.base64photo = null
+      }
+    },
+    uploadedphoto() {
+      console.log('base64', this.base64photo)
+      if (this.base64photo) {
+        return {
+          image_1: this.base64photo
+        }
       }
     }
   },
   computed: {
-    ...mapState('campaign', ['campaigns']),
-    ...mapState('catagory', ['catagories', 'selectedcatagories']),
-    ...mapState('packages', ['selected_package', 'days', 'packages']),
-    ...mapGetters('catagory', ['ischannelcatagoryselected']),
-    ...mapGetters('packages', ['getselectedpackage']),
-    // photos: {
-    //   get() {
-    //     return this.$store.state.campaign.newcampaign.photos
-    //   },
-    //   set(val) {
-    //     if (val !== null) {
-    //       val.forEach((file) => {
-    //         this.$store.commit('campaign/updateNewCampaign', {
-    //           key: 'photos',
-    //           value: file
-    //         })
-    //       })
-    //     } else {
-    //       this.$store.commit('campaign/updateNewCampaign', {
-    //         key: 'all',
-    //         value: val
-    //       })
-    //     }
-    //   }
-    // },
-    // message: {
-    //   get() {
-    //     return this.$store.state.campaign.newcampaign.message
-    //   },
-    //   set(val) {
-    //     this.$store.commit('campaign/updateNewCampaign', {
-    //       key: 'message',
-    //       value: val
-    //     })
-    //   }
-    // },
-    // starting_date: {
-    //   get() {
-    //     return this.$store.state.campaign.newcampaign.starting_date
-    //   },
-    //   set(val) {
-    //     this.$store.commit('campaign/updateNewCampaign', {
-    //       key: 'starting_date',
-    //       value: val
-    //     })
-    //   }
-    // },
-    displayPackage() {
-      return Object.keys(this.packages).length > 0 || false
-    }
+    // ...mapState('campaign', ['campaigns']),
+    // ...mapState('catagory', ['catagories', 'selectedcatagories']),
+    // ...mapState('packages', ['selected_package', 'days', 'packages']),
+    // ...mapGetters('catagory', ['ischannelcatagoryselected']),
+    // ...mapGetters('packages', ['getselectedpackage']),
+    // previewimage() {
+    //   if (this.newcampaign.photo.length === 0) return ''
+    //   else return URL.createObjectURL(this.newcampaign.photo[0])
+    // }
   },
   components: {
-    // 'package-list': require('components/campaign/Package.vue').default,
-    // 'category-selection-step': require('components/campaign/Category.vue')
-    //   .default,
-    // 'steeper-navigation': require('components/campaign/SteeperNavigation.vue')
-    //   .default,
-    'campaign-form': require('components/campaign/CampaignForm.vue').default
+    'campaign-form': require('components/campaign/CampaignForm.vue').default,
+    'add-campaign-preview': require('src/components/campaign/AddCampaignPreview.vue')
+      .default
   }
 }
 </script>
 
 <style scoped>
-.my-card {
-  width: 100%;
-  max-width: 400px;
+.preview {
+  width: 260px;
 }
 </style>

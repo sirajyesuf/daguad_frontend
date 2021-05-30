@@ -51,7 +51,7 @@
 
 <script>
 export default {
-  props: ['days', 'packages'],
+  props: ['days', 'packages', 'selected_package'],
   data() {
     return {
       tab: null,
@@ -59,14 +59,15 @@ export default {
     }
   },
   created() {
-    if (this.days.length > 0) this.tab = this.days[0].name
+    if (this.selected_package) this.tab = this.selected_package.dayname
+    else this.tab = this.days[0].name
   },
   methods: {
     selectedtab(name) {
       this.tab = name
     },
-    selectedpackage(day, packageid) {
-      this.$emit('packageselected', day, packageid)
+    selectedpackage(day, packageId) {
+      this.$emit('selectedpackage', day, packageId)
     }
   }
 }

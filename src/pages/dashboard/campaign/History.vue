@@ -1,55 +1,75 @@
 <template>
-  <div v-if="!loading" class="column">
-    <div class="col">
-      <q-select
-        outlined
-        style="width: 200px"
-        v-model="day"
-        :options="days"
-        label="filter by date"
-        class="text-primary float-right"
-      />
-    </div>
-    <div class="col">
-      <q-markup-table flat>
-        <thead>
-          <tr>
-            <th class="text-left">Channel</th>
-            <th class="text-right">View</th>
-            <th class="text-right">Date</th>
-            <th class="text-right">Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          <template v-if="posts.length">
-            <tr v-for="post in posts" :key="post.key">
-              <td class="text-left">
-                <a
-                  :href="`https://t.me/${post.channel.username}/${post.message_id}`"
-                >
-                  {{ post.channel.name }}</a
-                >
-                <q-skeleton v-if="loading" animation="blink" type="text" />
-              </td>
-              <td class="text-right">
-                {{ post.view }}
-                <q-skeleton v-if="loading" animation="blink" type="text" />
-              </td>
-              <td class="text-right">
-                {{ new Date(post.posted_date).toLocaleDateString() }}
-                <q-skeleton v-if="loading" animation="blink" type="text" />
-              </td>
-              <td class="text-right">
-                {{ post.active_status }}
-                <q-skeleton v-if="loading" animation="blink" type="text" />
-              </td>
+  <div>
+    <channel-navigation routename="campaign_list"></channel-navigation>
+    <q-separator color="orange" class="q-mb-sm"></q-separator>
+    <div v-if="!loading" class="column">
+      <div class="col">
+        <q-select
+          outlined
+          style="width: 200px"
+          v-model="day"
+          :options="days"
+          label="filter by date"
+          class="text-primary float-right"
+        />
+      </div>
+      <div class="col">
+        <q-markup-table flat separator="cell" bordered class="q-mt-sm">
+          <thead>
+            <tr>
+              <th colspan="7">
+                <div class="row no-wrap items-center">
+                  <div class="text-h5 q-ml-md text-secondary">
+                    Campaign Post History
+                  </div>
+                </div>
+              </th>
             </tr>
-          </template>
-          <template v-else>
-            <span>Empty</span>
-          </template>
-        </tbody>
-      </q-markup-table>
+            <tr>
+              <th class="text-left">Channel <i class="fas fa-bullhorn"></i></th>
+              <th class="text-left">View <i class="far fa-eye"></i></th>
+              <th class="text-left">
+                Date <i class="fas fa-calendar-week"></i>
+              </th>
+              <th class="text-left">
+                Status <i class="fas fa-battery-three-quarters"></i>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <template v-if="posts.length">
+              <tr v-for="post in posts" :key="post.key">
+                <td class="text-left">
+                  <a
+                    class="text-primary"
+                    :href="`https://t.me/${post.channel.username}/${post.message_id}`"
+                  >
+                    {{ post.channel.name }}</a
+                  >
+                  <q-skeleton v-if="loading" animation="blink" type="text" />
+                </td>
+                <td class="text-left">
+                  {{ post.view }}
+                  <q-skeleton v-if="loading" animation="blink" type="text" />
+                </td>
+                <td class="text-left">
+                  {{ new Date(post.posted_date).toLocaleDateString() }}
+                  <q-skeleton v-if="loading" animation="blink" type="text" />
+                </td>
+                <td class="text-left">
+                  {{ post.active_status }}
+                  <q-skeleton v-if="loading" animation="blink" type="text" />
+                </td>
+              </tr>
+            </template>
+          </tbody>
+        </q-markup-table>
+        <template v-if="posts.length === 0">
+          <p class="text-info text-center q-ma-sm">
+            zero post is posted for this campaign 🙄
+          </p>
+        </template>
+      </div>
     </div>
   </div>
 </template>
@@ -103,6 +123,10 @@ export default {
         return this.day === new Date(post.posted_date).toLocaleDateString()
       })
     }
+  },
+  components: {
+    'channel-navigation': require('components/partitions/ChannelNavigation.vue')
+      .default
   }
 }
 </script>

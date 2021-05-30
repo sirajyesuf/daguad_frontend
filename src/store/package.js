@@ -29,7 +29,17 @@ const mutations = {
     console.log(payload)
     state.packages[payload.dayname].forEach((pack) => {
       if (pack.id === payload.packageid) {
-        pack.selected = !pack.selected
+        // pack.selected = !pack.selected
+        if (pack.selected) {
+          console.log('unselected')
+          pack.selected = false
+          state.selected_package = 0
+        } else {
+          console.log('selected')
+          pack.selected = true
+          state.selected_package = payload
+        }
+
         state.days.forEach((day) => {
           if (day.name !== payload.dayname) {
             if (pack.selected === true) {
@@ -43,7 +53,6 @@ const mutations = {
         pack.selected = false
       }
     })
-    state.selected_package = payload.packageid
   }
 }
 const actions = {
@@ -76,7 +85,7 @@ const getters = {
       value.forEach((pack) => {
         if (pack.selected === true) {
           console.log('the selected package was', pack.id)
-          return pack.id
+          return pack
         }
       })
     }

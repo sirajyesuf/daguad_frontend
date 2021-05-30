@@ -1,8 +1,8 @@
 <template>
   <q-page class="window-height window-width row justify-around items-center">
     <div>
-      <h2 class="text-weight-bold q-my-md">daguad</h2>
-      <p class="text-weight-light">
+      <h2 class="text-weight-bold q-my-xs">daguad</h2>
+      <p class="text-weight-light text-center">
         Lorem, ipsum dolor sit amet consectetur adipisicing elit. Asperiores ex
       </p>
     </div>
@@ -11,8 +11,7 @@
         flat
         dark
         square
-        class="my-card bg-white"
-        style="width: 500px; height: 485px"
+        :class="{ login: $q.screen.gt.sm, 'login-mobile': $q.screen.lt.md }"
       >
         <q-card-section class="bg-cyan-8 text-center text-h6">
           Login
@@ -33,45 +32,44 @@
               ref="password_input"
               :password.sync="login.password"
             ></password-input>
-            <div class="col">
-              <div class="row">
+            <div class="row">
+              <!-- <div class="col">
                 <q-toggle
                   v-model="login.remember"
-                  label="Remember me"
-                  class="text-black"
                   color="green"
+                  label="remember me"
                 />
-              </div>
-              <div class="row">
-                <q-btn
-                  color="secondary"
-                  type="submit"
-                  class="q-mt-sm"
-                  :loading="loading"
-                  >Sign In</q-btn
+              </div> -->
+              <div class="col">
+                <router-link to="forgot_password">
+                  Forgot password?</router-link
                 >
               </div>
-              <!-- <p class="text-red">{{ login }}</p> -->
+            </div>
+            <div>
+              <q-btn
+                color="secondary"
+                type="submit"
+                class="q-mt-sm"
+                :loading="loading"
+                >Sign In</q-btn
+              >
             </div>
           </form>
         </q-card-section>
         <q-card-actions align="around" class="bg-white">
+          <span class="text-black text-caption text-muted"
+            >Don't have an account?</span
+          >
           <q-btn
             flat
             outline
             rounded
             to="signup"
-            color="primary"
-            label="create new account"
+            color="black"
+            :no-caps="true"
+            label="Sign Up"
           ></q-btn>
-          <q-btn
-            flat
-            outline
-            rounded
-            color="primary"
-            to="forgot_password"
-            label="Forgot your password?"
-          />
         </q-card-actions>
       </q-card>
     </div>
@@ -93,23 +91,18 @@ export default {
   },
   methods: {
     ...mapActions('user', ['signin']),
-    submit() {
+    async submit() {
       if (this.validate()) {
-        return new Promise((resolve, reject) => {
+        try {
           this.loading = true
-          this.signin(this.login)
-            .then((res) => {
-              this.loading = false
-              const redirectpath = this.$route.query.redirect || '/dashboard'
-              this.$router.push(redirectpath)
-            })
-            .catch((err) => {
-              if (err.response.status === 401) {
-                this.loading = false
-                this.fail = true
-              }
-            })
-        })
+          await this.$store.dispatch('user/signin', this.login)
+          const redirectpath = this.$route.query.redirect || '/dashboard'
+          this.$router.push(redirectpath)
+        } catch (error) {
+          this.fail = true
+        } finally {
+          this.loading = false
+        }
       }
     },
     validate() {
@@ -140,9 +133,11 @@ export default {
 </script>
 
 <style scoped>
-.my-card {
-  width: 100%;
-  max-width: 500px;
+.login {
+  width: 400px;
+}
+.login-mobile {
+  width: 330px;
 }
 h2 {
   color: #1877f2;

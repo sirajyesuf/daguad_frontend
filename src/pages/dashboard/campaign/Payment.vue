@@ -1,75 +1,100 @@
 <template>
   <div>
-    <div class="q-ma-md select-paymet">
-      <p class="text-center q-pa-md text-black text-weight-bold">
-        please select the payment method to pay for your campaign
-      </p>
-    </div>
-    <div class="row">
-      <div
-        class="col-xs-6 col-sm-6 col-md-3"
-        v-for="paymet in paymentmethods"
-        :key="paymet.id"
-      >
-        <q-avatar square size="100px" class="shadow-3">
-          <img
-            class="paymet"
-            :src="paymet.logo_path"
-            @click="selectedpaymet(paymet.id)"
-          />
-        </q-avatar>
-      </div>
-    </div>
-    <div class="q-mt-xl">
-      <div class="q-ma-md select-paymet">
-        <p class="text-center q-pa-md text-black text-weight-bold">
-          pay ETB {{ campaign.package.total_amount }} only.
+    <channel-navigation routename="campaign_list"></channel-navigation>
+    <q-separator color="orange"></q-separator>
+    <div>
+      <div class="q-ma-md note">
+        <p class="text-left q-pa-md text-weight-bold text-info">
+          please select the payment method to pay for your campaign.
+          <br />
+          <router-link
+            href="#"
+            class="text-primary"
+            :to="{ name: 'campaign-detail', params: { id: campaign.id } }"
+          >
+            see the campaign detail
+          </router-link>
         </p>
       </div>
-      <div v-if="selected_payment_method" class="q-ma-xl" id="content">
-        <q-list>
-          <q-item clickable v-ripple>
-            <q-item-section avatar>
-              <q-icon color="primary" name="person" />
-            </q-item-section>
+      <div class="row q-col-gutter-sm q-ma-sm">
+        <div
+          class="col-xs-6 col-sm-4 col-md-3"
+          v-for="paymet in paymentmethods"
+          :key="paymet.id"
+        >
+          <!-- :src="paymet.logo_path" -->
 
-            <q-item-section>{{
-              selected_payment_method.payment_holder_name
-            }}</q-item-section>
-          </q-item>
-          <q-item clickable v-ripple>
-            <q-item-section avatar>
-              <q-icon
-                color="primary"
-                :name="
-                  selected_payment_method.type === 'bank'
-                    ? 'account_balance'
-                    : 'call'
-                "
-              />
-            </q-item-section>
-
-            <q-item-section>{{
-              selected_payment_method.payment_holder_id
-            }}</q-item-section>
-          </q-item>
-        </q-list>
-        <div class="q-pa-md" style="max-width: 400px">
-          <q-form class="q-gutter-md" @submit.prevent="submit">
-            <q-input
-              clearable
-              autofocus
-              outlined
-              dense
-              v-model="tn"
-              :error="error"
-              :error-message="error_message"
-              :rules="[(val) => !!val || '*Required']"
+          <q-avatar square size="100px" class="shadow-3">
+            <img
+              class="paymet"
+              src="2.png"
+              @click="selectedpaymet(paymet.id)"
             />
-            <div>
-              <q-btn label="verify" type="submit" color="primary" />
-            </div>
-          </q-form>
+          </q-avatar>
+        </div>
+      </div>
+      <div class="q-mt-xl">
+        <div class="q-ma-md note">
+          <p class="text-left q-pa-md text-pink text-weight-bold">
+            pay ETB {{ campaign.package.total_amount }} only.
+          </p>
+        </div>
+        <div v-if="selected_payment_method" class="q-ma-xl" id="content">
+          <q-list>
+            <q-item clickable v-ripple>
+              <q-item-section avatar>
+                <q-icon color="primary" name="person" />
+              </q-item-section>
+
+              <q-item-section>{{
+                selected_payment_method.payment_holder_name
+              }}</q-item-section>
+            </q-item>
+            <q-item clickable v-ripple>
+              <q-item-section avatar>
+                <q-icon
+                  color="primary"
+                  :name="
+                    selected_payment_method.type === 'bank'
+                      ? 'account_balance'
+                      : 'call'
+                  "
+                />
+              </q-item-section>
+
+              <q-item-section>{{
+                selected_payment_method.payment_holder_id
+              }}</q-item-section>
+            </q-item>
+          </q-list>
+          <div class="q-pa-md" style="max-width: 400px">
+            <q-form class="q-gutter-md" @submit.prevent="submit">
+              <q-input
+                clearable
+                autofocus
+                outlined
+                dense
+                v-model="tn"
+                :error="error"
+                :error-message="error_message"
+                :rules="[(val) => !!val || '*Required']"
+              />
+              <div>
+                <q-btn
+                  :loading="loading"
+                  label="Verify"
+                  :no-caps="true"
+                  type="submit"
+                  class="q-mx-md"
+                  color="primary"
+                >
+                  <template v-slot:loading>
+                    <q-spinner-facebook />
+                  </template>
+                </q-btn>
+              </div>
+            </q-form>
+          </div>
         </div>
       </div>
     </div>
@@ -81,6 +106,7 @@ import { mapGetters } from 'vuex'
 export default {
   data() {
     return {
+      loading: false,
       error: false,
       error_message: '',
       tn: '',
@@ -100,49 +126,48 @@ export default {
     },
     selectedpaymet(paymetId) {
       this.$store.commit('payment/selectedpaymet', paymetId)
+      this.tn = ''
     },
-    submit() {
-      const payload = {
-        payment_method_id: this.selected_payment_method.id,
-        ref_or_phone: this.tn,
-        advert_id: this.campaign.id
+    async submit() {
+      try {
+        this.loading = true
+        const payload = {
+          payment_method_id: this.selected_payment_method.id,
+          ref_or_phone: this.tn,
+          advert_id: this.campaign.id
+        }
+        await this.$api.post('campaigns/verify_payment', payload)
+        this.$store.commit('campaign/updateCampaign', this.campaign.id)
+        await this.$router.push({ name: 'campaign_list' })
+        this.$q.notify({
+          type: 'positive',
+          message: 'the payment is successfully verified'
+        })
+      } catch (error) {
+        this.$q.notify({
+          type: 'negative',
+          message: `${error.response.data.error}`
+        })
+      } finally {
+        this.loading = false
       }
-      this.$store
-        .dispatch('payment/paymentverification', payload)
-        .then((res) => {
-          this.$q.notify({
-            type: 'positive',
-            message: 'the payment is successfully verified'
-          })
-        })
-        .catch((err) => {
-          console.log('say error ', err.response.data.error)
-          this.error = true
-          this.error_message = err.response.data.error
-          this.$q.notify({
-            type: 'info',
-            message: `the campaign is allready paid.`
-          })
-        })
     }
   },
   computed: {
     ...mapGetters('payment', ['selected_payment_method', 'paymentmethods'])
+  },
+  components: {
+    'channel-navigation': require('components/partitions/ChannelNavigation.vue')
+      .default
   }
 }
 </script>
 
 <style scoped>
-.select-paymet {
-  border-left-color: hotpink;
+.note {
+  border-left-color: black;
   border-left-style: solid;
   border-left-width: 4px;
   box-sizing: border-box;
 }
-/* .paymet {
-  border-left-color: darkorange;
-  border-left-style: solid;
-  border-left-width: 4px;
-  box-sizing: border-box;
-} */
 </style>

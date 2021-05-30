@@ -19,5 +19,3 @@ export default {
   props: ['password', 'lable']
 }
 </script>
-
-// :error="password" // :error-message="password"

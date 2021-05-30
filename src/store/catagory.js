@@ -26,6 +26,10 @@ const mutations = {
     payload.forEach((catagory) => {
       state.catagories.push(Object.assign(catagory, { selected: false }))
     })
+  },
+  emptycatagory(state) {
+    state.selectedcatagories = []
+    state.catagories = []
   }
 }
 const actions = {

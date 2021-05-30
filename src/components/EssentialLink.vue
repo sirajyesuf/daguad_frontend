@@ -1,11 +1,11 @@
 <template>
   <q-item clickable tag="a" :to="link">
     <q-item-section v-if="icon" avatar>
-      <q-icon :name="icon" />
+      <q-icon :name="icon" color="" />
     </q-item-section>
 
     <q-item-section>
-      <q-item-label>{{ title }}</q-item-label>
+      <q-item-label class="text-orange">{{ title }}</q-item-label>
       <q-item-label caption>
         {{ caption }}
       </q-item-label>

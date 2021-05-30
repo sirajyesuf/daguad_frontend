@@ -2,7 +2,7 @@
   <q-page class="window-height window-width row justify-around items-center">
     <div>
       <h2 class="text-weight-bold q-my-md">daguad</h2>
-      <p class="text-weight-light">
+      <p class="text-weight-light text-center">
         Lorem, ipsum dolor sit amet consectetur adipisicing elit. Asperiores ex
       </p>
     </div>
@@ -12,13 +12,12 @@
         dark
         square
         class="bg-white"
-        style="width: 500px; height: 485px"
+        :class="{ login: $q.screen.gt.sm, 'login-mobile': $q.screen.lt.md }"
       >
-        <q-card-section class="bg-cyan">
+        <q-card-section class="bg-cyan-8">
           <div class="text-h6 text-center">Sign Up</div>
         </q-card-section>
         <q-separator dark inset />
-
         <q-card-section>
           <form class="q-px-sm q-pt-xl q-pb-lg" @submit.prevent="submit">
             <text-input
@@ -51,28 +50,19 @@
               Sign Up
             </q-btn>
             <q-card-actions align="around" class="bg-white">
+              <span class="text-black text-caption text-muted"
+                >Already have an account ?</span
+              >
               <q-btn
                 flat
                 outline
                 rounded
-                to="signup"
-                color="primary"
-                label="create new account"
-              ></q-btn>
-              <q-btn
-                flat
-                outline
-                rounded
-                color="primary"
-                to="forgot_password"
-                label="Forgot your password?"
+                color="black"
+                to="signin"
+                label="Sign In"
               />
             </q-card-actions>
-            <!-- 
-            <pre class="text-red">
-            {{ newuser }}
-            {{ servererrors }}
-          </pre -->
+
             >
           </form>
         </q-card-section>
@@ -88,9 +78,9 @@ export default {
     return {
       loading: false,
       newuser: {
-        email: 'siraj@gmail.com',
-        name: 'siraj yesuf',
-        password: '123456'
+        email: '',
+        name: '',
+        password: ''
       },
       servererrors: {
         email: {
@@ -102,32 +92,18 @@ export default {
   },
   methods: {
     ...mapActions('user', ['signup']),
-    submit() {
-      this.$refs.email_input.$refs.email.validate()
-      this.$refs.fullname.$refs.textinput.validate()
-      this.$refs.password_input.$refs.password.validate()
-      if (
-        this.$refs.fullname.$refs.textinput.hasError ||
-        this.$refs.email_input.$refs.email.hasError ||
-        this.$refs.password_input.$refs.password.hasError
-      ) {
-        this.formHasError = true
-      } else {
-        return new Promise((resolve, reject) => {
+    async submit() {
+      if (this.validate()) {
+        try {
           this.loading = true
-          this.signup(this.newuser)
-            .then((res) => {
-              this.loading = false
-              this.$router.push({ path: '/dashboard' })
-            })
-            .catch((err) => {
-              console.log('signup', err.response.data)
-              this.servererrors.email.msg = err.response.data.errors.email[0]
-              this.servererrors.email.err = true
-              this.loading = false
-              console.log('server error', this.servererrors)
-            })
-        })
+          await this.signup(this.newuser)
+          this.$router.push({ path: '/dashboard' })
+        } catch (err) {
+          this.servererrors.email.msg = err.response.data.errors.email[0]
+          this.servererrors.email.err = true
+        } finally {
+          this.loading = false
+        }
       }
     },
     clear() {
@@ -136,10 +112,24 @@ export default {
       this.newuser.email = null
     },
     clearname() {
-      this.newuser.fullname = null
+      this.newuser.name = ''
+    },
+    validate() {
+      this.$refs.email_input.$refs.email.validate()
+      this.$refs.fullname.$refs.textinput.validate()
+      this.$refs.password_input.$refs.password.validate()
+      if (
+        this.$refs.email_input.$refs.email.hasError ||
+        this.$refs.password_input.$refs.password.hasError ||
+        this.$refs.fullname.$refs.textinput.hasError
+      ) {
+        this.formHasError = true
+        return 0
+      } else {
+        return 1
+      }
     }
   },
-  computed: {},
   components: {
     'email-input': require('components/account/common/EmailInputField.vue')
       .default,
@@ -152,6 +142,12 @@ export default {
 </script>
 
 <style scoped>
+.login {
+  width: 400px;
+}
+.login-mobile {
+  width: 330px;
+}
 h2 {
   color: #1877f2;
 }

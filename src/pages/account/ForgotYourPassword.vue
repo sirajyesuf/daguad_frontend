@@ -1,6 +1,11 @@
 <template>
   <q-page>
-    <q-card flat dark class="my-card fixed-center">
+    <q-card
+      flat
+      dark
+      class="fixed-center"
+      :class="{ login: $q.screen.gt.sm, 'login-mobile': $q.screen.lt.md }"
+    >
       <q-card-section class="bg-cyan-8 text-center text-h6">
         Forgot Password
         <div class="text-subtitle2">
@@ -11,9 +16,10 @@
 
       <q-card-section class="bg-white">
         <form class="q-px-sm q-pt-xl q-pb-lg" @submit.prevent="submit">
-          <p v-if="reset_link_sent" class="text-primary">send successfully</p>
-          <p v-if="invalid_user" class="text-red">invalid email</p>
-          <p v-if="tomanyrequest" class="text-red">to many request</p>
+          <p v-if="reset_link_sent" class="text-primary">
+            send successfully.check your email
+          </p>
+          <p v-if="invalid_user" class="text-red">Invalid Email</p>
           <email-input
             ref="email_input"
             :email.sync="email"
@@ -34,11 +40,6 @@
           <router-link to="signin" class="text-secondary deco">
             Login
           </router-link>
-          <!-- <pre class="text-red">
- 
-            {{ email }}
-            {{ loading }}
-          </pre> -->
         </q-card-section>
       </q-card-section>
     </q-card>
@@ -51,34 +52,27 @@ export default {
   data() {
     return {
       loading: false,
-      email: 'sirajyesuf762@gmail.com',
+      email: '',
       reset_link_sent: false,
-      invalid_user: false,
-      tomanyrequest: false
+      invalid_user: false
     }
   },
   methods: {
     ...mapActions('user', ['forgotpassword']),
-    submit() {
+    async submit() {
       if (this.validate()) {
-        return new Promise((resolve, reject) => {
+        try {
           this.loading = true
-          this.forgotpassword(this.email)
-            .then((res) => {
-              // this.reset_link_sent = true
-              this.loading = false
-              this.showNotif()
-            })
-            .catch((err) => {
-              if (err.response.status === 404) {
-                this.invalid_user = true
-              }
-              if (err.response.status === 429) {
-                this.tomanyrequest = true
-              }
-              this.loading = false
-            })
-        })
+          await this.forgotpassword(this.email)
+          this.reset_link_sent = true
+          this.showNotif()
+        } catch (err) {
+          if (err.response.status === 404) {
+            this.invalid_user = true
+          }
+        } finally {
+          this.loading = false
+        }
       }
     },
     clear() {
@@ -112,9 +106,11 @@ export default {
 </script>
 
 <style scoped>
-.my-card {
-  width: 100%;
-  max-width: 500px;
+.login {
+  width: 400px;
+}
+.login-mobile {
+  width: 330px;
 }
 .deco {
   text-decoration-line: none;

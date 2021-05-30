@@ -15,18 +15,12 @@
         <q-toolbar-title class="text-primary"> DaguAd </q-toolbar-title>
 
         <div>
-          <q-btn
-            dense
-            flat
-            round
-            icon="notifications"
-            class="q-ml-md text-black"
-          >
-            <q-badge color="red" floating>4</q-badge>
-          </q-btn>
+          <span>
+            <Notifications :notifications="unreadnotifications"></Notifications>
+          </span>
           <q-btn-dropdown flat class="q-mx-sm" color="green">
             <q-list>
-              <q-item clickable v-ripple v-close-popup>
+              <q-item :to="{ name: 'settings' }">
                 <q-item-section avatar>
                   <q-icon name="settings" color="green"></q-icon>
                 </q-item-section>
@@ -52,7 +46,7 @@
       content-class="bg-white"
     >
       <q-list>
-        <q-item-label header class="text-grey-8"> John Doe </q-item-label>
+        <q-item-label header class="text-orange"> John Doe </q-item-label>
         <EssentialLink
           v-for="link in essentialLinks"
           :key="link.title"
@@ -61,9 +55,12 @@
       </q-list>
     </q-drawer>
 
-    <q-page-container class="xxxxx">
-      <q-page class="q-ma-xl">
-        <div class="q-pa-md q-gutter-sm bg-white w3-code">
+    <q-page-container :class="{ xxxxx: $q.screen.gt.sm ? true : false }">
+      <q-page :class="{ 'q-ma-xl': $q.screen.gt.sm ? true : false }">
+        <div
+          class="q-pa-md q-gutter-sm bg-white"
+          :class="{ code: $q.screen.gt.sm ? true : false }"
+        >
           <router-view />
         </div>
       </q-page>
@@ -74,34 +71,32 @@
 <script>
 import { mapActions, mapGetters } from 'vuex'
 import EssentialLink from 'components/EssentialLink.vue'
+import Notifications from 'components/Notification.vue'
 
 const linksData = [
   {
+    title: 'Dashboard',
+    icon: 'fas fa-bullhorn',
+    link: '/dashboard'
+  },
+  {
     title: 'Channels',
-    caption: 'add channel here',
-    icon: 'school',
+    icon: 'fas fa-bullhorn',
     link: '/dashboard/channels'
   },
   {
-    title: 'Campaign',
-    caption: 'publishe promotion here',
-    icon: 'code',
+    title: 'Campaigns',
+    icon: 'fas fa-ad',
     link: '/dashboard/campaign'
   },
-  {
-    title: 'Report',
-    caption: 'publishe promotion here',
-    icon: 'analytics'
-  },
+
   {
     title: 'Earning',
-    caption: 'publishe promotion here',
     icon: 'account_balance_wallet',
     link: '/dashboard/channels/earning'
   },
   {
     title: 'Payment',
-    caption: 'publishe promotion here',
     icon: 'account_balance_wallet',
     link: '/dashboard/payment'
   }
@@ -109,15 +104,20 @@ const linksData = [
 
 export default {
   name: 'MainLayout',
-  components: { EssentialLink },
+  components: { EssentialLink, Notifications },
   data() {
     return {
       leftDrawerOpen: false,
       essentialLinks: linksData
     }
   },
+  async created() {
+    await this.$store.dispatch('notification/fetchunreadNotifications')
+  },
   methods: {
     ...mapActions('user', ['signout']),
+    ...mapActions('notification', ['markasreadnotifications']),
+
     signout1() {
       return new Promise((resolve) => {
         this.signout()
@@ -131,7 +131,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('common', ['loading']),
+    ...mapGetters('notification', ['unreadnotifications']),
     icon() {
       if (this.leftDrawerOpen) {
         return 'arrow_forward'
@@ -150,11 +150,16 @@ export default {
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12) !important;
 }
 
-.w3-code {
+.code {
   width: auto;
   background-color: #fff;
   padding: 8px 12px;
   border-left: 4px solid #4caf50;
   word-wrap: break-word;
+}
+.my-card {
+  width: 100%;
+  width: 350px;
+  height: 200px;
 }
 </style>

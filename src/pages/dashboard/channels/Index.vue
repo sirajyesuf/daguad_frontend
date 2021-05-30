@@ -1,13 +1,17 @@
 <template>
   <div>
     <q-btn
+      flat
       color="orange"
       push
-      icon-right="add"
+      :no-caps="true"
+      icon-right="fas fa-plus-circle"
       label="Add Channel"
       :to="{ name: 'add_channel' }"
+      class="on-right"
     />
-    <q-markup-table flat>
+    <q-separator color="orange" class="q-mt-mb"></q-separator>
+    <q-markup-table flat separator="cell" bordered class="q-mt-xl">
       <thead>
         <tr>
           <th colspan="7">
@@ -18,11 +22,13 @@
         </tr>
         <tr>
           <th class="text-left">#</th>
-          <th class="text-left">Name</th>
-          <th class="text-left">Category</th>
-          <th class="text-center">Avgview/day</th>
-          <th class="text-center">Subscribers</th>
-          <th class="text-center">Status</th>
+          <th class="text-left">Name <i class="fas fa-bullhorn"></i></th>
+          <th class="text-left">Catagory <i class="fas fa-folder"></i></th>
+          <th class="text-center">Avgview/day <i class="far fa-eye"></i></th>
+          <th class="text-center">Subscribers <i class="fas fa-heart"></i></th>
+          <th class="text-center">
+            Status <i class="fas fa-battery-three-quarters"></i>
+          </th>
           <th class="text-center">Actions</th>
         </tr>
       </thead>
@@ -40,10 +46,14 @@
               {{ channel.name }}
             </a>
           </td>
-          <td class="text-center">
-            {{
-              channel.catagory !== null ? channel.catagory.name : 'not assigned'
-            }}
+          <td class="text-left">
+            <template v-if="channel.catagory !== null">
+              {{ channel.catagory.name }}
+            </template>
+            <template v-else>
+              <i class="fas fa-clock"></i>
+              wait for assiging
+            </template>
           </td>
           <td class="text-center">1000</td>
           <td class="text-center">
@@ -53,77 +63,65 @@
           <td class="text-center">pending</td>
 
           <td class="text-center">
-            <q-btn
-              color="negative"
-              icon-right="delete"
-              no-caps
-              flat
-              dense
-              @click="deleteChannel(channel.id)"
-            />
-            <q-btn
-              color="positive"
-              icon-right="details"
-              no-caps
-              flat
-              dense
-              :to="{ name: 'channel_post_history', params: { id: channel.id } }"
-            />
+            <div>
+              <q-btn
+                color="negative"
+                icon-right="delete"
+                no-caps
+                flat
+                dense
+                @click="deleteChannel(channel.id)"
+              />
+
+              <q-btn
+                color="positive"
+                icon-right="fas fa-history"
+                no-caps
+                flat
+                dense
+                :to="{
+                  name: 'channel_post_history',
+                  params: { id: channel.id }
+                }"
+              >
+                <q-tooltip> channel post history </q-tooltip>
+              </q-btn>
+            </div>
           </td>
         </tr>
       </tbody>
     </q-markup-table>
+    <div class="q-pa-lg flex flex-center">
+      <q-pagination @input="atInput" :max="max" :value="current" input />
+    </div>
   </div>
 </template>
 <script>
-import { mapGetters, mapActions } from 'vuex'
+import { mapGetters } from 'vuex'
 
 export default {
   data() {
     return {
-      loading: false,
-      username: 'channel_username',
-      error: false,
-      error_message: ''
+      current: 1,
+      max: 1
     }
   },
-  created() {
-    this.$store
-      .dispatch('channel/fetchChannels')
-      .then((response) => console.log('res.data', response.data))
-      .catch((error) => console.log(error))
+  async created() {
+    this.$store.commit('common/update', true)
+    const response = await this.$store.dispatch('channel/fetchChannels')
+    console.log('list of channel', response)
+    this.config(response)
   },
   methods: {
-    ...mapActions('channel', ['addChannel']),
-    submit() {
-      this.loading = true
-      this.addChannel('@' + this.username)
-        .then(() => {
-          this.$q.notify({
-            type: 'positive',
-            message:
-              'the channel is successfully created.wait for the approval.'
-          })
-        })
-        .catch((err) => {
-          if (err.response.status === 422) {
-            this.error = true
-            this.error_message = err.response.data.errors.username[0]
-          }
-        })
-        .finally(() => {
-          this.loading = false
-        })
+    config(response) {
+      this.max = Math.ceil(
+        response.data.meta.total / response.data.meta.per_page
+      )
     },
-
-    deleteChannel(channelId) {
-      this.$store
-        .dispatch('channel/deleteChannel', channelId)
-        .then((response) => {})
-    },
-    atinput() {
-      this.error = false
-      this.error_message = ''
+    async atInput(value) {
+      this.current = value
+      const response = await this.$store.dispatch('channel/fetchChannels')
+      this.config(response)
     }
   },
 

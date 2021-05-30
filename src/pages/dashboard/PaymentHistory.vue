@@ -17,60 +17,91 @@
 
     <q-tab-panels v-model="tab" animated>
       <q-tab-panel name="ep">
+        <div class="text-h6 text-grey">Channel Earning Payment History</div>
+
         <template>
           <div class="q-pa-md">
-            <q-markup-table class="no-shadow">
+            <q-markup-table class="no-shadow" separator="cell" bordered>
               <thead>
                 <tr>
                   <th class="text-left">#</th>
-                  <th class="text-left">TransactionId</th>
-                  <th class="text-left">PaymentMethod</th>
-                  <th class="text-left">Amount</th>
+                  <th class="text-left">Transaction Id</th>
+                  <th class="text-left">Payment Method</th>
+                  <th class="text-left">
+                    Amount
+                    <br />
+                    (ETB)
+                  </th>
                   <th class="text-left">PayedAt</th>
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="(payment, index) in epayments.data" :key="index">
-                  <td class="text-left">
-                    <q-skeleton v-if="eloading" animation="blink" type="rect" />
-                    <span v-else>
-                      {{ index + 1 }}
-                    </span>
-                  </td>
-                  <td class="text-left">
-                    <q-skeleton v-if="eloading" animation="blink" type="rect" />
-                    <span v-else>
-                      {{ payment.transaction_id }}
-                    </span>
-                  </td>
-                  <td class="text-left">
-                    <q-skeleton v-if="eloading" animation="blink" type="rect" />
-                    <span v-else>
-                      {{ payment.payment_method.payment_method_name }}
-                    </span>
-                  </td>
-                  <td class="text-left">
-                    <q-skeleton v-if="eloading" animation="blink" type="rect" />
-                    <span v-else>
-                      {{ payment.amount }}
-                    </span>
-                  </td>
-                  <td class="text-left">
-                    <q-skeleton v-if="eloading" animation="blink" type="rect" />
-                    <span v-else>
-                      {{ new Date(payment.created_at).toDateString() }}
-                    </span>
-                  </td>
-                </tr>
+                <template v-if="epayments.data.length > 0">
+                  <tr v-for="(payment, index) in epayments.data" :key="index">
+                    <td class="text-left">
+                      <q-skeleton
+                        v-if="eloading"
+                        animation="blink"
+                        type="rect"
+                      />
+                      <span v-else>
+                        {{ index + 1 }}
+                      </span>
+                    </td>
+                    <td class="text-left">
+                      <q-skeleton
+                        v-if="eloading"
+                        animation="blink"
+                        type="rect"
+                      />
+                      <span v-else>
+                        {{ payment.transaction_id }}
+                      </span>
+                    </td>
+                    <td class="text-left">
+                      <q-skeleton
+                        v-if="eloading"
+                        animation="blink"
+                        type="rect"
+                      />
+                      <span v-else>
+                        {{ payment.payment_method.payment_method_name }}
+                      </span>
+                    </td>
+                    <td class="text-left">
+                      <q-skeleton
+                        v-if="eloading"
+                        animation="blink"
+                        type="rect"
+                      />
+                      <span v-else>
+                        {{ payment.amount }}
+                      </span>
+                    </td>
+                    <td class="text-left">
+                      <q-skeleton
+                        v-if="eloading"
+                        animation="blink"
+                        type="rect"
+                      />
+                      <span v-else>
+                        {{ new Date(payment.created_at).toDateString() }}
+                      </span>
+                    </td>
+                  </tr>
+                </template>
+                <template v-else> zero payment history </template>
               </tbody>
             </q-markup-table>
-            <div class="q-pa-lg flex flex-center">
+            <div
+              class="q-pa-lg flex flex-center"
+              v-if="epayments.data.length > 0"
+            >
               <q-pagination
-                clickable
-                @click="fetchePayment"
-                v-model="ecurrent"
+                :value="ecurrent"
                 :max="emax"
-                input
+                :input="true"
+                @input="fetchePayment"
                 input-class="text-orange-10"
               />
             </div>
@@ -79,45 +110,74 @@
       </q-tab-panel>
 
       <q-tab-panel name="cp">
-        <div class="text-h6">Campaign Payment History</div>
+        <div class="text-h6 text-grey">Campaign Payment History</div>
         <template>
           <div class="q-pa-md">
-            <q-markup-table class="no-shadow">
+            <q-markup-table class="no-shadow" separator="cell" bordered>
               <thead>
                 <tr>
                   <th class="text-left">#</th>
-                  <th class="text-left">Amount</th>
-                  <th class="text-left">PaymentMethod</th>
+                  <th class="text-left">
+                    Amount <br />
+                    (ETB)
+                  </th>
+                  <th class="text-left">Payment Method</th>
                   <th class="text-left">PayedAt</th>
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="(cpayment, index) in cpayments.data" :key="index">
-                  <td class="text-left">
-                    <q-skeleton v-if="cloading" animation="blink" type="rect" />
-                    <span v-else>
-                      {{ index + 1 }}
-                    </span>
-                  </td>
-                  <td class="text-left">
-                    <q-skeleton v-if="cloading" animation="blink" type="rect" />
-                    <span v-else> {{ cpayment.package.total_amount }} </span>
-                  </td>
-                  <td class="text-left">
-                    <q-skeleton v-if="cloading" animation="blink" type="rect" />
-                    <span v-else> {{ cpayment.payment }} </span>
-                  </td>
-                  <td class="text-left">
-                    <q-skeleton v-if="cloading" animation="blink" type="rect" />
-                    <span v-else> {{ new Date().toDateString() }} </span>
-                  </td>
-                </tr>
+                <template v-if="cpayments.data.length > 0">
+                  <tr v-for="(cpayment, index) in cpayments.data" :key="index">
+                    <td class="text-left">
+                      <q-skeleton
+                        v-if="cloading"
+                        animation="blink"
+                        type="rect"
+                      />
+                      <span v-else>
+                        {{ index + 1 }}
+                      </span>
+                    </td>
+                    <td class="text-left">
+                      <q-skeleton
+                        v-if="cloading"
+                        animation="blink"
+                        type="rect"
+                      />
+                      <span v-else> {{ cpayment.package.total_amount }} </span>
+                    </td>
+                    <td class="text-left">
+                      <q-skeleton
+                        v-if="cloading"
+                        animation="blink"
+                        type="rect"
+                      />
+                      <span v-else> {{ cpayment.payment }} </span>
+                    </td>
+                    <td class="text-left">
+                      <q-skeleton
+                        v-if="cloading"
+                        animation="blink"
+                        type="rect"
+                      />
+                      <span v-else> {{ new Date().toDateString() }} </span>
+                    </td>
+                  </tr>
+                </template>
               </tbody>
             </q-markup-table>
-            <div class="q-pa-lg flex flex-center">
+            <template>
+              <p class="text-info text-center q-ma-sm">
+                zero campaign payment history 🙄
+              </p>
+            </template>
+
+            <div
+              class="q-pa-lg flex flex-center"
+              v-if="cpayments.data.length > 0"
+            >
               <q-pagination
-                clickable
-                @click="fetchcPayment"
+                @input="fetchcPayment"
                 v-model="ccurrent"
                 :max="cmax"
                 input
@@ -180,7 +240,8 @@ export default {
       const cpayments = this.fetchCampaignPayment(url)
       return await Promise.all([epayments, cpayments])
     },
-    async fetchePayment() {
+    async fetchePayment(value) {
+      this.ecurrent = value
       this.eloading = true
       const url = `payments/earning_payments?page=${this.current}`
       const response = await this.fetchEarningPayment(url)

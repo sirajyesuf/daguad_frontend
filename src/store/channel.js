@@ -20,31 +20,19 @@ const mutations = {
 }
 
 const actions = {
-  fetchChannels(context) {
-    return new Promise((resolve, reject) => {
-      api
-        .get('/channels/user_channels')
-        .then((response) => {
-          context.commit('setChannels', response.data)
-          resolve(response)
-        })
-        .catch((error) => {
-          reject(error)
-        })
-    })
+  async fetchChannels(context, url = null) {
+    var URL = '/channels/user_channels'
+    if (url !== null) URL = url
+    const response = await api.get(URL)
+    context.commit('setChannels', response.data.data)
+    return response
   },
-  addChannel(context, payload) {
-    return new Promise((resolve, reject) => {
-      api
-        .post('/channels/register_channel', { username: payload })
-        .then((res) => {
-          context.commit('addChannel', res.data)
-          resolve(res)
-        })
-        .catch((err) => {
-          reject(err)
-        })
+  async addChannel(context, payload) {
+    const response = await api.post('/channels/register_channel', {
+      username: payload
     })
+    console.log('add channel', response)
+    context.commit('addChannel', response.data)
   },
   deleteChannel(context, channelId) {
     return new Promise((resolve) => {

@@ -5,15 +5,7 @@
 </template>
 
 <script>
-export default {
-  computed: {
-    loading: {
-      get() {
-        return this.$store.state.common.loading
-      }
-    }
-  }
-}
+export default {}
 </script>
 <style scoped>
 /* .w3-code {

@@ -1,27 +1,26 @@
 import { Promise } from 'core-js'
 import { api } from 'boot/axios.js'
+import { LocalStorage, uid } from 'quasar'
+
 const state = {
-  key: localStorage.getItem('daguad_key') || null,
-  user: null,
-  dashboard_info: null
+  key: LocalStorage.getItem('daguad_key') || null,
+  user: null
 }
 
 const mutations = {
-  updateloading(state, payload) {
-    state.loading = payload
-  },
   signup(state, user) {
     state.user = user
-    localStorage.setItem('daguad_key', user.email)
+    state.key = uid()
+    LocalStorage.set('daguad_key', state.key)
   },
   signin(state, user) {
     state.user = user
-    localStorage.setItem('daguad_key', user.email)
-    state.key = localStorage.getItem('daguad_key') || null
+    state.key = uid()
+    LocalStorage.set('daguad_key', state.key)
   },
   signout(state) {
     state.key = null
-    localStorage.removeItem('daguad_key')
+    LocalStorage.remove('daguad_key')
     state.user = null
   },
   dashboardinfo(state, payload) {
@@ -30,57 +29,22 @@ const mutations = {
 }
 
 const actions = {
-  signup(context, user) {
-    return new Promise((resolve, reject) => {
-      api
-        .post('/auth/register', user)
-        .then((res) => {
-          context.commit('signup', res.data)
-          resolve(res)
-        })
-        .catch((err) => {
-          if (err.response) {
-            reject(err)
-          }
-        })
-    })
+  async signup(context, user) {
+    const response = await api.post('/auth/register', user)
+    context.commit('signup', response.data.data)
+    return response
   },
-  signin(context, creadentials) {
-    return new Promise((resolve, reject) => {
-      api.get('/csrf-cookie').then((res) => {
-        api
-          .post('/auth/login', creadentials)
-          .then((res) => {
-            context.commit('signin', res.data)
-            resolve(res)
-          })
-          .catch((err) => {
-            reject(err)
-          })
-      })
-    })
+  async signin(context, creadentials) {
+    // await api.get('/csrf-cookie')
+    const response = await api.post('/auth/login', creadentials)
+    context.commit('signin', response.data)
+    return response
   },
-  forgotpassword(context, email) {
-    return new Promise((resolve, reject) => {
-      api.get('/sanctum/csrf-cookie').then((res) => {
-        api
-          .post('api/auth/forgot_password', { email })
-          .then((res) => {
-            resolve(res)
-          })
-          .catch((err) => {
-            reject(err)
-          })
-      })
-    })
+  async forgotpassword(email) {
+    return await api.post('api/auth/forgot_password', { email })
   },
-  resetpassword(context, payload) {
-    return new Promise((resolve, reject) => {
-      api
-        .post('api/auth/reset_password', payload)
-        .then((res) => resolve(res))
-        .catch((err) => reject(err))
-    })
+  async resetpassword(payload) {
+    return await api.post('api/auth/reset_password', payload)
   },
   signout(context) {
     return new Promise((resolve, reject) => {
@@ -110,25 +74,9 @@ const actions = {
   }
 }
 
-const getters = {
-  dashboardinfo() {
-    return state.dashboardinfo
-  },
-  user(state) {
-    return state.user
-  },
-  isauth(state) {
-    if (state.key) {
-      return 1
-    }
-    return 0
-  }
-}
-
 export default {
   namespaced: true,
   state,
   mutations,
-  actions,
-  getters
+  actions
 }

@@ -1,22 +1,31 @@
 <template>
   <div v-if="!loading">
-    <h5>editing campaign</h5>
-    <!-- {{ campaign }}
-    {{ catagories }}
-    {{ selected_catagories }} -->
-    <campaign-form
-      :photos="campaign.images"
-      :newphotos.sync="newphotos"
-      :message.sync="campaign.message"
-      :starting_date.sync="campaign.starting_date"
-      :catagories="catagories"
-      :packages="packages"
-      :days="days"
-      :selected_catagories="selected_catagories"
-      @selectedpackage="selectedPackage"
-      @removeNewPhoto="removeNewPhoto"
-      @removeAllPhoto="removeAllPhoto"
-    ></campaign-form>
+    <div class="row">
+      <div class="text-h6 col-xs-6 col-sm-6 col-md-6">
+        <i class="fas fa-pencil-alt"></i>
+        Editing Campaign
+      </div>
+      <div class="col-xs-6 col-sm-6 col-md-6 q-gutter-x-sm">
+        <q-btn
+          flat
+          :no-caps="true"
+          label="Re Publishe"
+          color="secondary"
+          icon="fas fa-recycle"
+        ></q-btn>
+        <q-btn
+          flat
+          :no-caps="true"
+          label="Return To List"
+          color="orange"
+          icon="fas fa-list"
+          :to="{ name: 'campaign_list' }"
+        ></q-btn>
+      </div>
+    </div>
+
+    <q-separator class="q-my-xs"></q-separator>
+    <campaign-form :photos="campaign.images"> ></campaign-form>
   </div>
 </template>
 <script>
@@ -89,19 +98,19 @@ export default {
       return x
     },
     async fetchPackage() {
-      const campaignpackage = await this.$api.get('campaigns/packages', {
+      const campaignpackages = await this.$api.get('campaigns/packages', {
         params: {
           catagory_id: this.selected_catagories
         }
       })
-      return campaignpackage.data
+      return campaignpackages.data
     },
     async fetchEveryThing() {
       this.loading = true
       const response = await this.$api.get(`campaigns/${this.$route.params.id}`)
       const catagories = await this.$api.get('channels/channel_catagory')
       this.campaign = response.data
-      console.log('package', this.campaign.package)
+      console.log('cam catagories', this.campaign.catagories)
       this.campaign.catagories.forEach((catagory) => {
         this.selected_catagories.push(catagory.id)
       })

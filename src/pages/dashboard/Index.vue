@@ -2,85 +2,61 @@
   <div class="q-pa-md row items-start q-gutter-md">
     <q-spinner v-if="loading" color="grey" size="3em" :thickness="10" />
 
-    <q-card
-      v-else
-      class="col-md row-sm my-card"
-      v-for="i in info"
-      :key="i.title"
-    >
-      <q-card-section class="bg-primary text-white">
-        <div class="text-h6">{{ i.title }}</div>
-        <div class="text-subtitle2">{{ i.number }}</div>
+    <q-card class="col-md row-sm my-card">
+      <q-card-section class="bg-orange text-white text-center">
+        <div class="text-subtitle1">Number of Channel</div>
+        <div class="text-subtitle2">10</div>
       </q-card-section>
 
-      <q-separator />
-
-      <q-card-actions align="right">
-        <q-btn flat>Action 1</q-btn>
-        <q-btn flat>Action 2</q-btn>
+      <q-card-actions align="around">
+        <q-btn
+          flat
+          color="primary"
+          :no-caps="true"
+          label="Channel List"
+          to="/dashboard/channels"
+        ></q-btn>
       </q-card-actions>
     </q-card>
 
     <q-card class="col-md row-sm my-card">
-      <q-card-section class="bg-purple text-white">
-        <div class="text-h6">Our Changing Planet</div>
-        <div class="text-subtitle2">by John Doe</div>
+      <q-card-section class="bg-orange text-white text-center">
+        <div class="text-subtitle1">Number of Campaign</div>
+        <div class="text-subtitle2">100</div>
       </q-card-section>
 
       <q-card-actions align="around">
-        <q-btn flat>Action 1</q-btn>
-        <q-btn flat>Action 2</q-btn>
-      </q-card-actions>
-    </q-card>
-
-    <q-card class="col-md row-sm my-card">
-      <q-card-section class="bg-info text-white">
-        <div class="text-h6">Our Changing Planet</div>
-        <div class="text-subtitle2">by John Doe</div>
-      </q-card-section>
-
-      <q-card-actions align="around">
-        <q-btn flat>Action 1</q-btn>
-        <q-btn flat>Action 2</q-btn>
+        <q-btn
+          flat
+          color="primary"
+          :no-caps="true"
+          label="Campaign List"
+          to="/dashboard/campaign"
+        ></q-btn>
       </q-card-actions>
     </q-card>
     <q-card class="col-md row-sm my-card">
-      <q-card-section class="bg-teal text-white">
-        <div class="text-h6">Our Changing Planet</div>
-        <div class="text-subtitle2">by John Doe</div>
+      <q-card-section class="bg-orange text-white text-center">
+        <div class="text-subtitle1">Total Earning</div>
+        <div class="text-subtitle2">1000 ETB</div>
       </q-card-section>
 
       <q-card-actions align="around">
-        <q-btn flat>Action 1</q-btn>
-        <q-btn flat>Action 2</q-btn>
+        <q-btn
+          flat
+          color="primary"
+          :no-caps="true"
+          label="View Earning"
+          to="dashboard/channels/earning"
+        ></q-btn>
       </q-card-actions>
     </q-card>
   </div>
 </template>
 
 <script>
-import { mapActions } from 'vuex'
-
 export default {
-  name: 'PageIndex',
-  data() {
-    return {
-      loading: false,
-      info: null
-    }
-  },
-  methods: {
-    ...mapActions('user', ['dashboardinfo']),
-    fetchdata() {
-      this.loading = true
-      setTimeout(() => {}, 5000)
-      // this.info = this.dashboardinfo()
-      this.loading = false
-    }
-  },
-  created() {
-    this.fetchdata()
-  }
+  name: 'PageIndex'
 }
 </script>
 

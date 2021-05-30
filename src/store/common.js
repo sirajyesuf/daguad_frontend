@@ -1,22 +1,21 @@
 const state = {
-  loading: false
+  axioscatcher: true
 }
 
 const mutations = {
-  updateLoading(state) {
-    state.loading = true
+  update(state, payload) {
+    console.log('hghghhh', payload)
+    state.axioscatcher = payload
   }
 }
-const actions = {}
 const getters = {
-  loading(state) {
-    return state.loading
+  axioscatcher(state) {
+    return state.axioscatcher
   }
 }
 export default {
   namespaced: true,
   state,
   mutations,
-  actions,
   getters
 }

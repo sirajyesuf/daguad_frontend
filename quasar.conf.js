@@ -27,7 +27,7 @@ module.exports = function (/* ctx */) {
     extras: [
       // 'ionicons-v4',
       // 'mdi-v5',
-      // 'fontawesome-v5',
+      'fontawesome-v5',
       // 'eva-icons',
       // 'themify',
       // 'line-awesome',
@@ -92,9 +92,8 @@ module.exports = function (/* ctx */) {
       //
       // components: [],
       // directives: [],
-
       // Quasar plugins
-      plugins: ['Notify', 'Cookies', 'Loading', 'AppFullscreen']
+      plugins: ['Notify', 'Cookies', 'Loading', 'AppFullscreen', 'LocalStorage']
     },
 
     // animations: 'all', // --- includes all animations

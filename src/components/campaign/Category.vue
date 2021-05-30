@@ -3,10 +3,9 @@
     <q-list bordered class="rounded-borders">
       <q-item tag="label" v-ripple>
         <q-item-section side top>
-          {{ catagory.selected }}
           <q-checkbox
             :value="catagory.selected"
-            @input="$emit('catagoryselected', catagory.id)"
+            @input="$emit('catagoryselected', catagory)"
           />
         </q-item-section>
 

@@ -21,6 +21,7 @@ import catagory from './catagory.js'
 import campaign from './campaign.js'
 import common from './common.js'
 import payment from './payment.js'
+import notification from './notification.js'
 export default function (/* { ssrContext } */) {
   const Store = new Vuex.Store({
     modules: {
@@ -30,7 +31,8 @@ export default function (/* { ssrContext } */) {
       catagory,
       packages,
       payment,
-      common
+      common,
+      notification
     },
 
     // enable strict mode (adds overhead!)

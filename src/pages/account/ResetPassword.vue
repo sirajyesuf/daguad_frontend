@@ -1,6 +1,11 @@
 <template>
   <q-page>
-    <q-card flat dark class="my-card fixed-center">
+    <q-card
+      flat
+      dark
+      class="my-card fixed-center"
+      :class="{ login: $q.screen.gt.sm, 'login-mobile': $q.screen.lt.md }"
+    >
       <q-card-section class="bg-cyan-8 text-center text-h6">
         Reset Password
         <div class="text-subtitle2">Enter Here Your New Password</div>
@@ -9,8 +14,6 @@
       <q-card-section class="bg-white">
         <p v-if="invalid_token" class="text-red">invalid token</p>
         <form class="q-px-sm q-pt-xl q-pb-lg" @submit.prevent="submit">
-          <!-- <q-input outlined v-model="reset.email" disable readonly> </q-input> -->
-
           <password-input
             ref="password_input"
             :password.sync="reset.password"
@@ -25,7 +28,6 @@
             :loading="loading"
           >
           </q-btn>
-          <pre class="text-red">{{ reset }}</pre>
         </form>
       </q-card-section>
     </q-card>
@@ -51,26 +53,19 @@ export default {
     clear($event) {
       this.reset.email = null
     },
-    submit() {
+    async submit() {
       this.$refs.password_input.$refs.password.validate()
-      if (this.$refs.password_input.$refs.password.hasError) {
-        this.formHasError = true
-      } else {
-        return new Promise((resolve, reject) => {
+      if (!this.$refs.password_input.$refs.password.hasError) {
+        try {
           this.loading = true
           this.reset.password_confirmation = this.reset.password
-          this.resetpassword(this.reset)
-            .then((res) => {
-              this.loading = false
-              this.$router.push({ path: 'signin' })
-            })
-            .catch((err) => {
-              this.loading = false
-              if (err.response.status === 422) {
-                this.invalid_token = true
-              }
-            })
-        })
+          await this.resetpassword(this.reset)
+          this.$router.push({ path: 'signin' })
+        } catch (error) {
+          this.invalid_token = true
+        } finally {
+          this.loading = false
+        }
       }
     }
   },
@@ -86,8 +81,10 @@ export default {
 }
 </script>
 <style scoped>
-.my-card {
-  width: 100%;
-  max-width: 500px;
+.login {
+  width: 400px;
+}
+.login-mobile {
+  width: 330px;
 }
 </style>
