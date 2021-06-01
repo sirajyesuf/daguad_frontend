@@ -6,11 +6,21 @@
     </q-card-section>
     <q-card-section>
       <q-list bordered separator>
-        <q-item v-for="(notification, index) in readnotifications" :key="index">
-          <q-item-section>{{ notification.data.body }}</q-item-section>
-          <q-item-section side>
-            <q-item-label caption>
-              {{ new Date(notification.created_at).toLocaleString() }}
+        <q-item
+          v-for="(notification, index) in readnotifications"
+          :key="index"
+          clickable
+          :to="{ name: 'read_notification', params: { id: notification.id } }"
+        >
+          <q-item-section>
+            <q-item-label class="text-subtitle">
+              {{ notification.data.title }}
+            </q-item-label>
+          </q-item-section>
+
+          <q-item-section side top>
+            <q-item-label caption class="text-muted text-green">
+              {{ notification.created_at }}
             </q-item-label>
           </q-item-section>
         </q-item>

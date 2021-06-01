@@ -16,7 +16,10 @@
 
         <div>
           <span>
-            <Notifications :notifications="unreadnotifications"></Notifications>
+            <Notifications
+              :notifications="unreadnotifications"
+              @markasreadnotifications="Markasreadnotifications"
+            ></Notifications>
           </span>
           <q-btn-dropdown flat class="q-mx-sm" color="green">
             <q-list>
@@ -69,7 +72,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions } from 'vuex'
 import EssentialLink from 'components/EssentialLink.vue'
 import Notifications from 'components/Notification.vue'
 
@@ -108,16 +111,24 @@ export default {
   data() {
     return {
       leftDrawerOpen: false,
-      essentialLinks: linksData
+      essentialLinks: linksData,
+      unreadnotifications: null
     }
   },
   async created() {
-    await this.$store.dispatch('notification/fetchunreadNotifications')
+    await this.Fetchunreadnotifications()
   },
   methods: {
     ...mapActions('user', ['signout']),
     ...mapActions('notification', ['markasreadnotifications']),
-
+    async Fetchunreadnotifications() {
+      const response = await this.$api.get('notifications/unread_notifications')
+      this.unreadnotifications = response.data
+    },
+    async Markasreadnotifications() {
+      await this.$api.get('notifications/markasread_notifications')
+      await this.Fetchunreadnotifications()
+    },
     signout1() {
       return new Promise((resolve) => {
         this.signout()
@@ -131,7 +142,6 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('notification', ['unreadnotifications']),
     icon() {
       if (this.leftDrawerOpen) {
         return 'arrow_forward'

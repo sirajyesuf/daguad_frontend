@@ -5,8 +5,9 @@
       Viewing Campaign
     </div>
     <div>
-      <div class="row justify-end">
+      <div class="row">
         <q-btn
+          class="col"
           :no-caps="true"
           flat
           label="Edit"
@@ -16,6 +17,7 @@
         >
         </q-btn>
         <q-btn
+          class="col"
           flat
           :no-caps="true"
           color="orange"
@@ -25,6 +27,7 @@
         />
 
         <q-btn
+          class="col"
           flat
           :no-caps="true"
           label="Return To List"
@@ -38,11 +41,12 @@
     <q-separator class="q-my-sm"></q-separator>
     <!-- content and package display start -->
     <div class="q-pa-md row items-start q-gutter-md">
-      <q-card class="col-xs-12 col-sm-12 col-md-6 no-shadow">
+      <q-card
+        class="col-xs-12 col-sm-12 col-md-6 no-shadow"
+        style="width: 300px"
+      >
         <img :src="campaign.images[0].path" />
-
-        <q-card-section class="q-pt-none" v-html="campaign.message">
-        </q-card-section>
+        <p class="q-pt-none" v-html="campaign.message"></p>
       </q-card>
       <div class="col-xs-12 col-sm-12 col-md-5 no-shadow">
         <q-list bordered padding>

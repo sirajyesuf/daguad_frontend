@@ -53,7 +53,9 @@ export default async ({ app, router, Vue, store }) => {
 
 // Add a response interceptor
 
-api.get('csrf-cookie')
+api.get('csrf-cookie').then((response) => {
+  console.log('boot axios', response.headers)
+})
 
 // for use inside Vue files through this.$axios and this.$api
 Vue.prototype.$api = api

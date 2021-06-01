@@ -114,6 +114,11 @@ const routes = [
         path: 'notifications',
         name: 'notifications',
         component: () => import('src/pages/dashboard/DisplayNotifications.vue')
+      },
+      {
+        path: 'notifications/:id',
+        name: 'read_notification',
+        component: () => import('src/pages/dashboard/ReadNotification.vue')
       }
     ]
   },

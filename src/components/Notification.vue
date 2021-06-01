@@ -16,13 +16,13 @@
             <q-item v-for="(notification, index) in notifications" :key="index">
               <q-item-section>
                 <q-item-label caption>
-                  {{ notification.data.subject }}
+                  {{ notification.data.title }}
                 </q-item-label>
               </q-item-section>
 
               <q-item-section side>
                 <q-item-label caption>{{
-                  new Date(notification.created_at).toLocaleString()
+                  notification.created_at
                 }}</q-item-label>
               </q-item-section>
             </q-item>
