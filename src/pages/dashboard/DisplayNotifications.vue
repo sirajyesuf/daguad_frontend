@@ -2,7 +2,7 @@
   <q-card class="no-shadow">
     <q-card-section class="bg-primary text-white">
       <div class="text-h6">Notifications</div>
-      <div class="text-subtitle2">All Notifications</div>
+      <div class="text-subtitle2">All Notifications2</div>
     </q-card-section>
     <q-card-section>
       <q-list bordered separator>
@@ -14,13 +14,13 @@
         >
           <q-item-section>
             <q-item-label class="text-subtitle">
-              {{ notification.data.title }}
+              {{ notification.data.subject }}
             </q-item-label>
           </q-item-section>
 
           <q-item-section side top>
             <q-item-label caption class="text-muted text-green">
-              {{ notification.created_at }}
+              {{ new Date(notification.created_at).toLocaleString() }}
             </q-item-label>
           </q-item-section>
         </q-item>
@@ -50,7 +50,7 @@ export default {
     }
   },
   async created() {
-    const notifications = await this.fetchreadNotifications('/notifications')
+    const notifications = await this.fetchreadNotifications('notifications')
     this.max = Math.ceil(notifications.data.total / notifications.data.per_page)
     this.readnotifications = notifications.data.data
     console.log(this.max)

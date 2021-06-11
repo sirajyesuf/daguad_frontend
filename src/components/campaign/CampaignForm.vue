@@ -16,7 +16,6 @@
       ref="selectedcatagories"
       v-show="false"
       :value="selectedcatagories"
-      multiple
       :options="catagories"
       :rules="[catagoryvalidation]"
     />

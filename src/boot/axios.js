@@ -2,13 +2,22 @@
 import DisplayLoading from './loading'
 import Vue from 'vue'
 import axios from 'axios'
+import { LocalStorage } from 'quasar'
+
 const api = axios.create({
   baseURL: 'http://127.0.0.1:8000/api',
   withCredentials: true
 })
+api.defaults.headers.common.Accept = 'application/json'
+
 // "async" is optional;
 // more info on params: https://quasar.dev/quasar-cli/boot-files
 export default async ({ app, router, Vue, store }) => {
+  const token = store.getters['user/token']
+  console.log('hi', token)
+  if (token) {
+    api.defaults.headers.common.Authorization = `Bearer ${token}`
+  }
   api.interceptors.request.use(
     function (config) {
       // Do something before request is sent
@@ -25,20 +34,26 @@ export default async ({ app, router, Vue, store }) => {
       // Any status code that lie within the range of 2xx cause this function to trigger
       // Do something with response data
       store.commit('common/update', false)
-      DisplayLoading(0)
-
+      setTimeout(() => {
+        DisplayLoading(0)
+      }, 1000)
       return response
     },
     function (error) {
       // Any status codes that falls outside the range of 2xx cause this function to trigger
       // Do something with response error
       store.commit('common/update', false)
-      DisplayLoading(0)
+      setTimeout(() => {
+        DisplayLoading(0)
+      }, 1000)
       const statuscode = error.response.status
       console.log('status_code', statuscode)
-      if (statuscode === 500) router.push({ name: '500' })
+      // if (statuscode === 500) router.push({ name: '500' })
       if (statuscode === 403) router.push({ name: '403' })
-      if (statuscode === 401) router.push({ name: 'signin' })
+      if (statuscode === 401) {
+        LocalStorage.remove('daguad_token')
+        router.push({ name: 'signin' })
+      }
 
       return Promise.reject(error)
     }

@@ -3,28 +3,18 @@
   <header id="topnav" class="defaultscroll sticky">
     <div class="container">
       <!-- Logo container-->
-      <a class="logo" href="index.html">
-        <img src="daguad4.png" height="70" class="logo-light-mode" alt="" />
+      <a class="logo" href="/">
+        <img src="daguad22.png" height="60" class="logo-light-mode" alt="" />
       </a>
-      <div class="buy-button">
-        <a
-          href="https://1.envato.market/4n73n"
-          target="_blank"
-          class="btn btn-primary"
-          >Sign Up</a
-        >
+      <div class="buy-button" v-if="!isauth">
+        <a href="/account/signup" class="btn btn-primary">Sign Up</a>
       </div>
-      <div class="buy-button">
-        <a
-          href="https://1.envato.market/4n73n"
-          target="_blank"
-          class="btn btn-primary"
-          >Sign In</a
-        >
+      <div class="buy-button" v-if="!isauth">
+        <a href="account/signin" class="btn btn-primary">Sign In</a>
       </div>
       <!--end login button-->
       <!-- End Logo container-->
-      <div class="menu-extras">
+      <div class="menu-extras" v-if="!isauth">
         <div class="menu-item">
           <!-- Mobile menu toggle-->
           <a class="navbar-toggle" id="isToggle" onclick="toggleMenu()">
@@ -43,20 +33,10 @@
         <!--end navigation menu-->
         <div class="row">
           <div class="buy-menu-btn d-none col">
-            <a
-              href="https://1.envato.market/4n73n"
-              target="_blank"
-              class="btn btn-primary"
-              >Sign Up</a
-            >
+            <a href="account/signup" class="btn btn-primary">Sign Up</a>
           </div>
           <div class="buy-menu-btn d-none col">
-            <a
-              href="https://1.envato.market/4n73n"
-              target="_blank"
-              class="btn btn-primary"
-              >Sign In</a
-            >
+            <a href="account/signin" class="btn btn-primary">Sign In</a>
           </div>
         </div>
 
@@ -69,3 +49,11 @@
   <!--end header-->
   <!-- Navbar End -->
 </template>
+<script>
+import { mapGetters } from 'vuex'
+export default {
+  computed: {
+    ...mapGetters('user', ['isauth'])
+  }
+}
+</script>

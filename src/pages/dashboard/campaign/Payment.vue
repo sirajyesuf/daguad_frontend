@@ -5,7 +5,8 @@
     <div>
       <div class="q-ma-md note">
         <p class="text-left q-pa-md text-weight-bold text-info">
-          please select the payment method to pay for your campaign.
+          pay the money using in one of the following options and enter the
+          transaction number to verify.
           <br />
           <router-link
             href="#"

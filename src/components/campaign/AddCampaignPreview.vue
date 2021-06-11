@@ -25,12 +25,13 @@
         <q-item-label>Example Channel</q-item-label>
       </q-item-section>
     </q-item>
-    <div>
-      <img :src="photo" class="campaign_image" />
-    </div>
-
-    <q-card-section class="q-pt-none">
-      <div v-html="message"></div>
+    <q-card-section>
+      <div>
+        <img :src="photo" class="campaign_image" />
+      </div>
+      <div class="">
+        <p v-html="message" class=""></p>
+      </div>
     </q-card-section>
   </q-card>
 </template>

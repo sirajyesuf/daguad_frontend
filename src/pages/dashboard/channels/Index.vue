@@ -35,7 +35,7 @@
       <tbody class="">
         <tr v-for="(channel, index) in channels" :key="channel.id">
           <td class="text-left">
-            {{ index + 1 }}
+            {{ index | number(current) }}
           </td>
           <td class="text-left">
             <a
@@ -91,7 +91,12 @@
         </tr>
       </tbody>
     </q-markup-table>
-    <div class="q-pa-lg flex flex-center">
+    <template v-if="channels.length === 0">
+      <p class="text-info text-center q-ma-sm">
+        zero channel payment history 🙄
+      </p>
+    </template>
+    <div v-if="channels.length !== 0" class="q-pa-lg flex flex-center">
       <q-pagination @input="atInput" :max="max" :value="current" input />
     </div>
   </div>
@@ -120,7 +125,10 @@ export default {
     },
     async atInput(value) {
       this.current = value
-      const response = await this.$store.dispatch('channel/fetchChannels')
+      const response = await this.$store.dispatch(
+        'channel/fetchChannels',
+        `/channels/user_channels?page=${this.current}`
+      )
       this.config(response)
     }
   },

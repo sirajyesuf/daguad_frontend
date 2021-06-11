@@ -122,13 +122,13 @@ const routes = [
       }
     ]
   },
+  // {
+  //   path: '/',
+  //   name: 'wellcome',
+  //   component: () => import('pages/Wellcome.vue')
+  // },
   {
     path: '/',
-    name: 'wellcome',
-    component: () => import('pages/Wellcome.vue')
-  },
-  {
-    path: '/landing',
     component: () => import('layouts/LandingLayout.vue'),
     children: [
       {
@@ -144,6 +144,11 @@ const routes = [
         path: '/contactus',
         name: 'contactus',
         component: () => import('pages/contactus.vue')
+      },
+      {
+        path: '/aboutus',
+        name: 'aboutus',
+        component: () => import('pages/aboutus.vue')
       }
     ]
   },

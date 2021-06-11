@@ -402,7 +402,17 @@ export default {
     async getbase64photo() {
       if (this.base64photo !== null) return { image_1: this.base64photo }
     },
+    formatStartingDate(date) {
+      var d = new Date(date),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear()
 
+      if (month.length < 2) month = '0' + month
+      if (day.length < 2) day = '0' + day
+
+      return [year, month, day].join('/')
+    },
     displayPackage() {
       return Object.keys(this.packages).length > 0 || false
     },
@@ -432,7 +442,7 @@ export default {
         message: this.campaign.message,
         package_id: this.selected_package.packageid,
         catagory_id: this.selectedcatagories,
-        starting_date: this.campaign.starting_date
+        starting_date: this.formatStartingDate(this.campaign.starting_date)
       }
       console.log('updatecampaign', updatedcampaign)
       if (

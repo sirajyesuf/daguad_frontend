@@ -90,9 +90,13 @@
                     </td>
                   </tr>
                 </template>
-                <template v-else> zero payment history </template>
               </tbody>
             </q-markup-table>
+            <template>
+              <p class="text-info text-center q-ma-sm">
+                zero channel payment history 🙄
+              </p>
+            </template>
             <div
               class="q-pa-lg flex flex-center"
               v-if="epayments.data.length > 0"

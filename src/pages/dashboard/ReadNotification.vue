@@ -4,11 +4,23 @@
       <div class="text-h6">{{ notification.data.title }}</div>
       <div class="text-subtitle2 text-caption text-muted text-weight-regular">
         Notifications
+        <br />
+        {{ notification.data.subject }}!
       </div>
     </q-card-section>
     <q-card-section>
-      <p>{{ notification.data.message }}</p>
+      <p v-html="notification.data.body"></p>
     </q-card-section>
+    <q-card-actions align="right" vertical>
+      <p class="q-mb-none text-subtitle2 text-muted">
+        By:
+        <span> dagu Ads </span>
+      </p>
+
+      <p class="q-mt-none text-subtitle3 text-muted">
+        {{ new Date(notification.created_at).toLocaleString() }}
+      </p>
+    </q-card-actions>
   </q-card>
 </template>
 

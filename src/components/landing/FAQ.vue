@@ -3,7 +3,7 @@
   <section class="section">
     <div class="container mt-100 mt-60">
       <div class="faq-title text-center pb-3">
-        <h3>Frequently Asked Questions</h3>
+        <h3 class="text-primary">Frequently Asked Questions</h3>
       </div>
       <div class="row align-items-center">
         <div class="col">
@@ -42,23 +42,26 @@ export default {
       faqs: [
         {
           id: 'One',
-          que: 'the question here',
-          ans: 'the answer here'
+          que: 'How can i  earn money as a telegram channel owner',
+          ans:
+            'if you have active telegram channel just register  your telegram channel and we post advert on your channel then we pay per post.simple as it is.'
         },
         {
           id: 'Two',
-          que: 'the question here',
-          ans: 'the answer here'
+          que: 'How can i launch campaign',
+          ans: 'first signup and order your campaign with simple steps'
         },
         {
           id: 'Three',
-          que: 'the question here',
-          ans: 'the answer here'
+          que: 'How can i pay for my campaign',
+          ans:
+            'first signin and from the dashboard click the campaign button  then from the list  select your campaign and click the paycampaign  button then from the list available payment methods select and pay using the given information  finally verify your paymnet using the  transaction number.'
         },
         {
-          id: 'Four',
-          que: 'the question here',
-          ans: 'the answer here'
+          id: 'four',
+          que: 'How can i create account on Dagu Ads',
+          ans:
+            'to create account first click the SignUp button and then full fill all the required information.finally click the submit button.'
         }
       ]
     }

@@ -16,13 +16,13 @@
             <q-item v-for="(notification, index) in notifications" :key="index">
               <q-item-section>
                 <q-item-label caption>
-                  {{ notification.data.title }}
+                  {{ notification.data.subject }}
                 </q-item-label>
               </q-item-section>
 
               <q-item-section side>
                 <q-item-label caption>{{
-                  notification.created_at
+                  new Date(notification.created_at).toLocaleDateString()
                 }}</q-item-label>
               </q-item-section>
             </q-item>
@@ -57,6 +57,6 @@ export default {
 <style scoped>
 .my-card {
   width: 350px;
-  height: 300px;
+  height: 200px;
 }
 </style>

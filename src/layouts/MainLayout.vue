@@ -12,7 +12,11 @@
           @click="leftDrawerOpen = !leftDrawerOpen"
         />
 
-        <q-toolbar-title class="text-primary"> DaguAd </q-toolbar-title>
+        <q-toolbar-title>
+          <a href="/" style="text-decoration: none" class="text-primary">
+            Dagu Ads
+          </a>
+        </q-toolbar-title>
 
         <div>
           <span>
@@ -49,7 +53,9 @@
       content-class="bg-white"
     >
       <q-list>
-        <q-item-label header class="text-orange"> John Doe </q-item-label>
+        <q-item-label header class="text-black">
+          {{ userinfo.name }} ({{ userinfo.email }})
+        </q-item-label>
         <EssentialLink
           v-for="link in essentialLinks"
           :key="link.title"
@@ -72,7 +78,8 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
+
 import EssentialLink from 'components/EssentialLink.vue'
 import Notifications from 'components/Notification.vue'
 
@@ -112,7 +119,7 @@ export default {
     return {
       leftDrawerOpen: false,
       essentialLinks: linksData,
-      unreadnotifications: null
+      unreadnotifications: []
     }
   },
   async created() {
@@ -122,26 +129,27 @@ export default {
     ...mapActions('user', ['signout']),
     ...mapActions('notification', ['markasreadnotifications']),
     async Fetchunreadnotifications() {
-      const response = await this.$api.get('notifications/unread_notifications')
-      this.unreadnotifications = response.data
+      setInterval(async () => {
+        if (this.isauth) {
+          const response = await this.$api.get(
+            'notifications/unread_notifications'
+          )
+          console.log(response)
+          this.unreadnotifications = response.data
+        }
+      }, 5000)
     },
     async Markasreadnotifications() {
-      await this.$api.get('notifications/markasread_notifications')
+      await this.$api.get('notifications/read_notification')
       await this.Fetchunreadnotifications()
     },
-    signout1() {
-      return new Promise((resolve) => {
-        this.signout()
-          .then((res) => {
-            this.$router.push({ path: '/' })
-          })
-          .catch((err) => {
-            console.log('signout err', err)
-          })
-      })
+    async signout1() {
+      await this.signout()
+      this.$router.push({ path: '/' })
     }
   },
   computed: {
+    ...mapGetters('user', ['isauth', 'userinfo']),
     icon() {
       if (this.leftDrawerOpen) {
         return 'arrow_forward'

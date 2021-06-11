@@ -18,20 +18,33 @@
                   Landrick.</span
                 >
               </div> -->
-              <h1 class="heading mb-3">
-                A <span class="text-primary">Digital</span> Product <br />
-                Marketing Agency
+              <h1 class="heading mb-0">
+                <span class="text-primary">Ethiopia's</span>
+                <span class="text-yellow"> Premium</span>
+                <br />
+                <span class="text-primary">
+                  Telegram advertizement Provider</span
+                >
+                <span class="text-orange">.</span>
               </h1>
               <p class="para-desc text-muted">
-                Launch your campaign and benefit from our expertise on designing
-                and managing conversion centered bootstrap v5 html page.
+                Launch your campaign and get more customers <br />
+                Earn money by registering your telegram channel.
               </p>
-              <div class="mt-4 pt-2">
-                <a
-                  href="javascript:void(0)"
-                  class="btn btn-pills btn-primary m-1"
-                  >Get Started</a
-                >
+              <div class="row">
+                <div class="col mt-4 pt-2" v-if="!isauth">
+                  <a
+                    href="/account/signin"
+                    class="btn btn-pills btn-primary m-1"
+                    >Get Started</a
+                  >
+                  <p class="text-black"></p>
+                </div>
+                <div class="col mt-4 pt-2" v-if="isauth">
+                  <a href="/dashboard" class="btn btn-pills btn-primary m-1"
+                    >Go to home</a
+                  >
+                </div>
               </div>
             </div>
           </div>
@@ -50,3 +63,11 @@
     <!-- Hero End -->
   </div>
 </template>
+<script>
+import { mapGetters } from 'vuex'
+export default {
+  computed: {
+    ...mapGetters('user', ['isauth'])
+  }
+}
+</script>

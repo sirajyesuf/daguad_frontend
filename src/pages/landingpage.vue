@@ -15,7 +15,7 @@
     <app-happyclient></app-happyclient>
     <!-- end happyclient -->
     <!-- start faq -->
-    <app-faq></app-faq>
+    <app-faq id="faq"></app-faq>
     <!-- end faq -->
     <!-- start have aquestion -->
     <app-haveaquestion></app-haveaquestion>
@@ -45,7 +45,6 @@ export default {
 <style scoped>
 @import url('/css/bootstrap.min.css');
 @import url('/css/tobii.min.css');
-
 @import url('/css/materialdesignicons.min.css');
 @import url('/css/tiny-slider.css');
 @import url('/css/style.min.css');

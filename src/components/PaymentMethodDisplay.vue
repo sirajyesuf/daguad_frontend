@@ -10,25 +10,22 @@
           square
           size="90px"
           :class="{ selectedpayment: payment.selected }"
-          @click="
-            selectedPaymentMethod(
-              payment.id === userpaymentmethod.user_id
-                ? userpaymentmethod
-                : payment,
-              userpaymentmethod.user_id === payment.id ? true : false
-            )
-          "
+          @click="selectedPaymentMethod(payment)"
         >
           <img class="paymet" :src="payment.logo_path" />
         </q-avatar>
       </div>
     </div>
-    <form @submit.prevent.stop="onSubmit" class="q-gutter-md">
+    <form
+      @submit.prevent.stop="onSubmit"
+      class="q-gutter-md"
+      v-if="userpaymtd !== null"
+    >
       <q-input
         ref="holder_name"
         outlined
         dense
-        v-model="userpaymtd.holder_name"
+        v-model="userpaymtd.payment_holder_name"
         label="Full Name"
         hint="Full Name"
         lazy-rules
@@ -41,7 +38,7 @@
         ref="identification_number"
         outlined
         dense
-        v-model="userpaymtd.identification_number"
+        v-model="userpaymtd.payment_holder_id"
         :label="
           userpaymtd.type === 'bank' ? ' Account Number' : ' Phone Number'
         "
@@ -51,10 +48,12 @@
       />
 
       <div>
-        <q-btn label="Save" type="submit" color="primary" />
+        <q-btn
+          :label="update ? 'Update' : 'Submit'"
+          type="submit"
+          color="primary"
+        />
       </div>
-
-      {{ userpaymtd }}
     </form>
   </div>
 </template>
@@ -63,49 +62,34 @@ export default {
   props: ['paymentmethods', 'userpaymentmethod'],
   data() {
     return {
-      userpaymtd: {
-        id: null,
-        type: null,
-        holder_name: null,
-        identification_number: null
-      }
+      userpaymtd: null,
+      update: false
     }
   },
   created() {
-    console.log(this.userpaymentmethod)
-    console.log(this.paymentmethods)
-    this.selectedPaymentMethod(
-      this.userpaymentmethod || this.paymentmethods[0],
-      !!this.userpaymentmethod
-    )
+    this.paymentmethods.forEach((ele) => {
+      if (ele.selected) {
+        this.userpaymtd = ele
+        this.update = true
+      }
+    })
   },
   methods: {
-    selectedPaymentMethod(payment, user = false) {
-      console.log(payment, user)
-      if (user) {
-        this.userpaymtd.holder_name = payment.holder_name
-        this.userpaymtd.identification_number = payment.identification_number
-      }
-      if (!user) {
-        this.userpaymtd.holder_name = null
-        this.userpaymtd.identification_number = null
-      }
-
+    selectedPaymentMethod(payment) {
       this.paymentmethods.forEach((element) => {
         if (element.id === payment.id) {
-          this.userpaymtd.id = element.id
-          this.userpaymtd.type = element.type
           element.selected = true
         } else {
           element.selected = false
         }
       })
+      this.userpaymtd = payment
     },
     async getselectedpaymentmethod() {
       return {
         payment_method_id: this.userpaymtd.id,
-        identification_number: this.userpaymtd.identification_number,
-        holder_name: this.userpaymtd.holder_name
+        identification_number: this.userpaymtd.payment_holder_id,
+        holder_name: this.userpaymtd.payment_holder_name
       }
     },
     async onSubmit() {
@@ -116,7 +100,25 @@ export default {
         !this.$refs.holder_name.hasError
       ) {
         const paymentmethod = await this.getselectedpaymentmethod()
-        this.$emit('store', paymentmethod)
+        if (this.update)
+          await this.storeUserPaymentMethod(
+            paymentmethod,
+            'payments/update_payment_method'
+          )
+        else {
+          await this.storeUserPaymentMethod(
+            paymentmethod,
+            'payments/add_payment_method'
+          )
+        }
+      }
+    },
+    async storeUserPaymentMethod(paymentmtd, url) {
+      try {
+        await this.$api.post(url, paymentmtd)
+        alert('succes')
+      } catch (error) {
+        alert('error')
       }
     }
   },
@@ -130,4 +132,3 @@ export default {
   border-style: solid;
 }
 </style>
-// payment_method_id // identification_number // holder_name

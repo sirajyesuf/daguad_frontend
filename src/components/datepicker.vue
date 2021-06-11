@@ -1,10 +1,10 @@
 <template>
   <v-date-picker v-model="range" is-range>
     <template v-slot="{ inputValue, inputEvents }">
-      <div class="row q-gutter-xl q-pa-md" style="max-width: 500px">
+      <div class="row q-gutter-md q-pa-sm">
         <q-input
           label="From"
-          class="col"
+          class="col-xs-4 col-sm-4 col-md-3"
           dense
           outlined
           :value="inputValue.start"
@@ -12,14 +12,14 @@
         />
         <q-input
           label="To"
-          class="col"
+          class="col-xs-4 col-sm-4 col-md-3"
           dense
           outlined
           :value="inputValue.end"
           v-on="inputEvents.end"
         />
         <q-btn
-          class="col"
+          class="col-xs-4 col-sm-4 col-md-3"
           outline
           color="primary"
           label="Apply "

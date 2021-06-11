@@ -1,6 +1,10 @@
-import { Loading } from 'quasar'
+import { Loading, QSpinnerBall } from 'quasar'
 function DisplayLoading(ok) {
-  if (ok) Loading.show()
+  if (ok)
+    Loading.show({
+      spinner: QSpinnerBall,
+      spinnerSize: '2em'
+    })
   else Loading.hide()
 }
 

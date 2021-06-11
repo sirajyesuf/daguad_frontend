@@ -1,8 +1,8 @@
 <template>
-  <li class="nav-item">
+  <li class="nav-item" @click="$emit('selectedDay', day)">
     <a
       class="nav-link rounded"
-      :class="{ active: index === 0 }"
+      :class="{ active: day.selected }"
       :id="`pills-${day}-tab`"
       data-bs-toggle="pill"
       :href="`#pills-${day}`"
@@ -11,7 +11,7 @@
       aria-selected="false"
     >
       <div class="text-center py-2">
-        <h6 class="mb-0">{{ day }}</h6>
+        <h6 class="mb-0">{{ day.value }} Day</h6>
       </div>
     </a>
   </li>

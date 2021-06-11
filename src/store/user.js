@@ -1,41 +1,42 @@
-import { Promise } from 'core-js'
 import { api } from 'boot/axios.js'
-import { LocalStorage, uid } from 'quasar'
+import { LocalStorage } from 'quasar'
 
 const state = {
-  key: LocalStorage.getItem('daguad_key') || null,
-  user: null
+  token: LocalStorage.getItem('daguad_token') || null,
+  user: LocalStorage.getItem('daguad_user') || null
 }
 
 const mutations = {
-  signup(state, user) {
-    state.user = user
-    state.key = uid()
-    LocalStorage.set('daguad_key', state.key)
+  signup(state, payload) {
+    state.token = payload.access_token
+    LocalStorage.set('daguad_token', state.token)
+    api.defaults.headers.common.Authorization = `Bearer ${state.token}`
   },
-  signin(state, user) {
-    state.user = user
-    state.key = uid()
-    LocalStorage.set('daguad_key', state.key)
+  signin(state, payload) {
+    state.token = payload.access_token
+    LocalStorage.set('daguad_token', state.token)
+    api.defaults.headers.common.Authorization = `Bearer ${state.token}`
+    LocalStorage.set('daguad_token', state.token)
   },
   signout(state) {
-    state.key = null
-    LocalStorage.remove('daguad_key')
+    state.token = null
     state.user = null
+    LocalStorage.remove('daguad_token')
+    LocalStorage.remove('daguad_user')
   },
-  dashboardinfo(state, payload) {
-    state.dashboard_info = payload
+  userinfo(state, payload) {
+    state.user = payload
+    LocalStorage.set('daguad_user', state.user)
   }
 }
 
 const actions = {
   async signup(context, user) {
     const response = await api.post('/auth/register', user)
-    context.commit('signup', response.data.data)
+    context.commit('signup', response.data)
     return response
   },
   async signin(context, creadentials) {
-    // await api.get('/csrf-cookie')
     const response = await api.post('/auth/login', creadentials)
     context.commit('signin', response.data)
     return response
@@ -46,31 +47,26 @@ const actions = {
   async resetpassword(payload) {
     return await api.post('api/auth/reset_password', payload)
   },
-  signout(context) {
-    return new Promise((resolve, reject) => {
-      api
-        .post('/logout')
-        .then((res) => {
-          context.commit('signout')
-          resolve(res)
-        })
-
-        .catch((err) => {
-          reject(err)
-        })
-    })
+  async signout(context) {
+    await api.post('/logout')
+    context.commit('signout')
   },
-  dashboardinfo(context) {
-    const payload = [
-      { title: 'channels', number: 100 },
-      { title: 'compaign', numbe: 30 },
-      { title: 'active_channel', number: 488 },
-      { title: 'total_earning', number: 399 }
-    ]
-    setTimeout(() => {
-      context.commit('dashbordinfo', payload)
-    }, 5000)
-    return payload
+  async userinfo(context) {
+    const response = await api.get('/user')
+    console.log('user', response.data.data)
+    context.commit('userinfo', response.data.data)
+    return response
+  }
+}
+const getters = {
+  isauth(state) {
+    return state.token !== null
+  },
+  token(state) {
+    return state.token
+  },
+  userinfo(state) {
+    return state.user
   }
 }
 
@@ -78,5 +74,6 @@ export default {
   namespaced: true,
   state,
   mutations,
-  actions
+  actions,
+  getters
 }

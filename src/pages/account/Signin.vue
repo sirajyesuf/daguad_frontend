@@ -1,9 +1,15 @@
 <template>
   <q-page class="window-height window-width row justify-around items-center">
     <div>
-      <h2 class="text-weight-bold q-my-xs">daguad</h2>
+      <h2 class="text-weight-bold q-my-xs">
+        <a href="/" style="text-decoration: none" class="text-primary"
+          >Dagu Ads</a
+        >
+      </h2>
       <p class="text-weight-light text-center">
-        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Asperiores ex
+        Launch your campaign and get more customers.
+        <br />
+        Earn money by registering your telegram channel.
       </p>
     </div>
     <div>
@@ -96,9 +102,11 @@ export default {
         try {
           this.loading = true
           await this.$store.dispatch('user/signin', this.login)
+          await this.$store.dispatch('user/userinfo')
           const redirectpath = this.$route.query.redirect || '/dashboard'
           this.$router.push(redirectpath)
         } catch (error) {
+          console.log('log', error)
           this.fail = true
         } finally {
           this.loading = false

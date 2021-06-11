@@ -26,7 +26,11 @@
       </q-item-section>
     </q-item>
     <div v-if="photo">
-      <q-img :src="photo" spinner-color="red" class="campaign_image">
+      <q-img
+        :src="photo | imagefullurl"
+        spinner-color="red"
+        class="campaign_image"
+      >
         <q-badge color="transparent" floating>
           <q-icon
             clickable

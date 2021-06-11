@@ -5,12 +5,14 @@
       <div class="row justify-content-center">
         <div class="col-12 text-center">
           <div class="section-title mb-4 pb-2">
-            <h4 class="title mb-4">Event Schedules</h4>
+            <h4 class="title mb-0 text-primary">
+              Select a package that works for your bussiness
+            </h4>
             <p class="text-muted para-desc mx-auto mb-0">
               Start working with
-              <span class="text-primary fw-bold">Landrick</span> that can
-              provide everything you need to generate awareness, drive traffic,
-              connect.
+              <span class="text-primary fw-bold">dagu Ads</span> that can
+              provide everything you need to get more customers for your
+              bussiness.
             </p>
           </div>
         </div>
@@ -31,6 +33,7 @@
               v-for="(day, index) in days"
               :key="index"
               :index="index"
+              @selectedDay="selectedDay"
             ></displaypackage-tab>
             <!-- endtab -->
           </ul>
@@ -41,57 +44,22 @@
         <div class="col-12">
           <div class="tab-content" id="pills-tabContent">
             <div
-              class="tab-pane fade show active"
-              id="pills-dayone"
+              class="tab-pane fade show"
+              :class="{ active: day.selected }"
+              id="`pills-${day}`"
               role="tabpanel"
-              aria-labelledby="pills-dayone-tab"
+              aria-labelledby="`pills-${day}-tab`"
+              v-for="(day, index) in days"
+              :key="index"
             >
               <div class="row">
                 <!-- start single package -->
                 <displaypackage-singlepackage
-                  v-for="(i, index) in 2"
+                  v-for="(i, index) in packages[day.value]"
                   :key="index"
+                  :package1="i"
+                  :day="day"
                 ></displaypackage-singlepackage>
-                <!-- end singlepankage -->
-              </div>
-            </div>
-            <!--end teb pane-->
-            <div
-              class="tab-pane fade show active"
-              id="pills-dayfour"
-              role="tabpanel"
-              aria-labelledby="pills-daytwo-tab"
-            >
-              <div class="row">
-                <!-- start single package -->
-                <displaypackage-singlepackage></displaypackage-singlepackage>
-                <!-- end singlepankage -->
-              </div>
-            </div>
-            <!--end teb pane-->
-            <div
-              class="tab-pane fade"
-              id="pills-daytwo"
-              role="tabpanel"
-              aria-labelledby="pills-daythree-tab"
-            >
-              <div class="row">
-                <!-- start single package -->
-                <displaypackage-singlepackage></displaypackage-singlepackage>
-                <!-- end singlepankage -->
-              </div>
-            </div>
-            <!--end teb pane-->
-
-            <div
-              class="tab-pane fade"
-              id="pills-daythree"
-              role="tabpanel"
-              aria-labelledby="pills-dayfour-tab"
-            >
-              <div class="row">
-                <!-- start single package -->
-                <displaypackage-singlepackage></displaypackage-singlepackage>
                 <!-- end singlepankage -->
               </div>
             </div>
@@ -112,33 +80,39 @@
 export default {
   data() {
     return {
-      days: ['dayone', 'daytwo', 'daythree', 'dayfour'],
-      packages: {
-        dayone: [
-          {
-            name: 'silver package',
-            see: '200 up 400 view per day'
-          }
-        ],
-        daytwo: [
-          {
-            name: 'golden package',
-            see: '200 up 400 view per day'
-          }
-        ],
-        daythree: [
-          {
-            name: 'premimum package',
-            see: '200 up 400 view per day'
-          }
-        ],
-        dayfour: [
-          {
-            name: 'bronze package',
-            see: '200 up 400 view per day'
-          }
-        ]
+      days: [],
+      packages: {}
+    }
+  },
+  async created() {
+    await this.fetchPackages()
+    this.selectedDay(this.days[0])
+  },
+  methods: {
+    configdays() {
+      this.days = []
+      for (const i in this.packages) {
+        const day = {
+          value: i,
+          selected: false
+        }
+        this.days.push(day)
       }
+    },
+    async fetchPackages() {
+      const response = await this.$api.get('available_packages', {
+        params: {
+          catagory_id: [1, 2, 3, 4, 5]
+        }
+      })
+      this.packages = response.data
+      this.configdays()
+    },
+    selectedDay(day) {
+      this.days.forEach((ele) => {
+        if (ele.value === day.value) ele.selected = true
+        else ele.selected = false
+      })
     }
   },
   components: {

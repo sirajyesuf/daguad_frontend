@@ -41,12 +41,15 @@
     <q-separator class="q-my-sm"></q-separator>
     <!-- content and package display start -->
     <div class="q-pa-md row items-start q-gutter-md">
-      <q-card
-        class="col-xs-12 col-sm-12 col-md-6 no-shadow"
-        style="width: 300px"
-      >
-        <img :src="campaign.images[0].path" />
-        <p class="q-pt-none" v-html="campaign.message"></p>
+      <q-card class="col-xs-12 col-sm-12 col-md-6 no-shadow my-card">
+        <img :src="campaign.images[0].path | imagefullurl" />
+
+        <q-card-section>
+          <div
+            class="text-subtitle1 text-muted"
+            v-html="campaign.message"
+          ></div>
+        </q-card-section>
       </q-card>
       <div class="col-xs-12 col-sm-12 col-md-5 no-shadow">
         <q-list bordered padding>
@@ -165,7 +168,10 @@ export default {
   word-wrap: break-word;
 }
 .my-card {
-  width: 100%;
-  max-width: 250px;
+  width: 300px;
+}
+
+.sm-view {
+  display: inline-block;
 }
 </style>

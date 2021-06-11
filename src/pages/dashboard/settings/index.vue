@@ -62,7 +62,6 @@
           <display-payment-method
             :paymentmethods="paymentmethods"
             :userpaymentmethod="userpaymentmethod"
-            @store="storeUserPaymentMethod"
           ></display-payment-method>
         </q-tab-panel>
       </q-tab-panels>
@@ -99,7 +98,7 @@ export default {
   async created() {
     this.userpaymentmethod = await this.fetchUserPaymetMethod()
     const paymentmtds = await this.fetchListOfUserPaymentMethods()
-    await this.configPaymentMethods(paymentmtds.data, this.userpaymentmethod)
+    await this.configPaymentMethods(paymentmtds, this.userpaymentmethod)
   },
   methods: {
     async getTelegramNotificationVerificationLink() {
@@ -112,11 +111,17 @@ export default {
       paymentmethods.forEach((element) => {
         if (userpaymentmethod === null) {
           Object.assign(element, { selected: false })
+          element.payment_holder_name = null
+          element.payment_holder_id = null
         } else {
           if (userpaymentmethod.payment_method_id === element.id) {
             Object.assign(element, { selected: true })
+            element.payment_holder_name = userpaymentmethod.holder_name
+            element.payment_holder_id = userpaymentmethod.identification_number
           } else {
             Object.assign(element, { selected: false })
+            element.payment_holder_name = null
+            element.payment_holder_id = null
           }
         }
 
@@ -124,10 +129,11 @@ export default {
       })
     },
     async fetchListOfUserPaymentMethods() {
-      return await this.$api.get('campaigns/list_of_payment_method')
+      const response = await this.$api.get('campaigns/list_of_payment_method')
+      return response.data
     },
     async fetchUserPaymetMethod() {
-      const response = await this.$api.get('payments/user_paymet_method')
+      const response = await this.$api.get('/user')
       return response.data.data.paymentmethod
     },
     onSubmit() {
@@ -149,18 +155,6 @@ export default {
           .catch(() => {
             this.error = true
           })
-      }
-    },
-    async storeUserPaymentMethod(paymentmtd) {
-      try {
-        const userpaymentmethod = await this.$api.post(
-          'payments/add_payment_method',
-          paymentmtd
-        )
-        this.configPaymentMethods(this.paymentmethods, userpaymentmethod.data)
-        alert('succes')
-      } catch (error) {
-        alert('error')
       }
     }
   },

@@ -38,13 +38,13 @@
       </thead>
       <tbody>
         <tr v-for="(campaign, index) in campaigns" :key="campaign.id">
-          <td class="text-left">{{ (current - 1) * 5 + index + 1 }}</td>
+          <td class="text-left">{{ index | number(current) }}</td>
           <td class="text-left">
             <q-chip>
               <q-avatar size="xl">
-                <img src="campaign.images[0].path" />
+                <img :src="campaign.images[0].path | imagefullurl" />
               </q-avatar>
-              {{ campaign.message | display_message }}
+              <span v-html="display_message(campaign.message)"></span>
             </q-chip>
           </td>
           <td class="text-left">
@@ -79,7 +79,7 @@
               </q-btn>
 
               <q-btn
-                color="positive"
+                color="secondary"
                 icon-right="fas fa-history"
                 no-caps
                 flat
@@ -93,7 +93,7 @@
               </q-btn>
               <q-btn
                 color="positive"
-                icon-right="fas fa-history"
+                icon-right="fas fa-info"
                 no-caps
                 flat
                 dense
@@ -138,6 +138,10 @@ export default {
   },
   components: {},
   methods: {
+    display_message(value) {
+      value = value.toString()
+      return value.slice(0, 20)
+    },
     config(response) {
       this.max = Math.ceil(
         response.data.meta.total / response.data.meta.per_page
@@ -168,10 +172,6 @@ export default {
     ...mapGetters('campaign', ['campaigns'])
   },
   filters: {
-    display_message(value) {
-      value = value.toString()
-      return value.slice(0, 20)
-    },
     Approvedstatus(value) {
       if (value === 1) return '☑️Approved'
       if (value === 0) return '✖️Blocked'

@@ -11,7 +11,7 @@
           v-model="day"
           :options="days"
           label="filter by date"
-          class="text-primary float-right q-mt-sm"
+          class="text-primary q-mt-sm"
         />
       </div>
       <div class="col">
@@ -55,7 +55,7 @@
             </template>
           </tbody>
         </q-markup-table>
-        <template>
+        <template v-if="posts.length === 0">
           <p class="text-info text-center q-ma-sm">
             zero post is posted in this channel 🙄
           </p>

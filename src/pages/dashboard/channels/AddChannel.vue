@@ -21,20 +21,15 @@
       </q-item>
       <q-item>
         <q-item-section>
-          <p>3.Click on «Add Administrator» button.</p>
-        </q-item-section>
-      </q-item>
-      <q-item>
-        <q-item-section>
           <p>
-            4.Find our bot using search field
+            3.Find our bot using search field
             <q-btn
               size="12px"
               color="grey-4"
               text-color="black"
               no-caps
               unelevated
-              label="@dagu_ad"
+              label="@daguadsbot"
               @click="copytoclibboard"
             />
 
@@ -44,11 +39,16 @@
       </q-item>
       <q-item>
         <q-item-section>
+          <p>4.Click on «Add Administrator» button.</p>
+        </q-item-section>
+      </q-item>
+      <q-item>
+        <q-item-section>
           <p class="">
             5. By default our bot is allowed to send messages,
-            <span class="text-red"> do not turn off that </span>
+            <span class="text-red"> do not turn off that. </span>
           </p>
-          <img src="3.png" class="img q-py-xl" style="width: 300px" />
+          <img src="addchannel1.png" class="img q-py-xl" style="width: 300px" />
         </q-item-section>
       </q-item>
       <q-item>
@@ -123,7 +123,7 @@ export default {
     },
 
     copytoclibboard() {
-      copyToClipboard('@dagu_ad').then(() => {
+      copyToClipboard('@daguadsbot').then(() => {
         this.$q.notify({
           position: 'center',
           message: 'the user name is copy to the clip board',
