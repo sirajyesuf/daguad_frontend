@@ -100,11 +100,8 @@ export default {
       }
     },
     async fetchPackages() {
-      const response = await this.$api.get('available_packages', {
-        params: {
-          catagory_id: [1, 2, 3, 4, 5]
-        }
-      })
+      const response = await this.$api.get('available_packages')
+      console.log('ava', response)
       this.packages = response.data
       this.configdays()
     },

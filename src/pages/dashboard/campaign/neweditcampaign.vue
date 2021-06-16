@@ -202,15 +202,15 @@ export default {
     },
     async catagoryselected(catagoryId) {
       this.catagories.forEach((catagory) => {
-        if (catagory.id === catagoryId) {
+        if (Number(catagory.id) === Number(catagoryId)) {
           catagory.selected = !catagory.selected
-          if (this.selectedcatagories.includes(catagoryId)) {
+          if (this.selectedcatagories.includes(Number(catagoryId))) {
             this.selectedcatagories.splice(
               this.selectedcatagories.indexOf(catagoryId),
               1
             )
           } else {
-            this.selectedcatagories.push(catagoryId)
+            this.selectedcatagories.push(Number(catagoryId))
           }
         }
       })

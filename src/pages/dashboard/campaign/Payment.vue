@@ -17,19 +17,21 @@
           </router-link>
         </p>
       </div>
+      {{ paymentmethods }}
       <div class="row q-col-gutter-sm q-ma-sm">
         <div
           class="col-xs-6 col-sm-4 col-md-3"
-          v-for="paymet in paymentmethods"
-          :key="paymet.id"
+          v-for="payment in paymentmethods"
+          :key="payment.id"
         >
-          <!-- :src="paymet.logo_path" -->
+          {{ payment.logo_path }}
 
           <q-avatar square size="100px" class="shadow-3">
             <img
+              :src="payment.logo_path"
               class="paymet"
-              src="2.png"
-              @click="selectedpaymet(paymet.id)"
+              @click="selectedpaymet(payment.id)"
+              alt="payment method logo"
             />
           </q-avatar>
         </div>

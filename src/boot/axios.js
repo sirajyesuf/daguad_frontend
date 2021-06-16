@@ -2,10 +2,8 @@
 import DisplayLoading from './loading'
 import Vue from 'vue'
 import axios from 'axios'
-import { LocalStorage } from 'quasar'
-
 const api = axios.create({
-  baseURL: 'http://127.0.0.1:8000/api',
+  baseURL: 'https://api.daguads.com/api',
   withCredentials: true
 })
 api.defaults.headers.common.Accept = 'application/json'
@@ -51,7 +49,7 @@ export default async ({ app, router, Vue, store }) => {
       // if (statuscode === 500) router.push({ name: '500' })
       if (statuscode === 403) router.push({ name: '403' })
       if (statuscode === 401) {
-        LocalStorage.remove('daguad_token')
+        store.commit('user/signout')
         router.push({ name: 'signin' })
       }
 

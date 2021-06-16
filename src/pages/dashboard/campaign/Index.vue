@@ -53,7 +53,7 @@
               :no-caps="true"
               color="primary"
               label="Pay Campaign"
-              v-if="campaign.paid_status === 0"
+              v-if="Number(campaign.paid_status) === 0"
               :to="{
                 name: 'campaign_payment',
                 params: {
@@ -173,13 +173,13 @@ export default {
   },
   filters: {
     Approvedstatus(value) {
-      if (value === 1) return '☑️Approved'
-      if (value === 0) return '✖️Blocked'
+      if (Number(value) === 1) return '☑️Approved'
+      if (Number(value) === 0) return '✖️Blocked'
     },
     currentstatus(value) {
-      if (value === 1) return 'Wating'
-      if (value === 2) return 'Active'
-      if (value === 3) return 'Closed'
+      if (Number(value) === 1) return 'Wating'
+      if (Number(value) === 2) return 'Active'
+      if (Number(value) === 3) return 'Closed'
     },
     starting_date(value) {
       return new Date(value).toDateString()

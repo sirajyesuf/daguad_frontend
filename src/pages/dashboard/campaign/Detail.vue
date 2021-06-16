@@ -42,7 +42,10 @@
     <!-- content and package display start -->
     <div class="q-pa-md row items-start q-gutter-md">
       <q-card class="col-xs-12 col-sm-12 col-md-6 no-shadow my-card">
-        <img :src="campaign.images[0].path | imagefullurl" />
+        <img
+          :src="campaign.images[0].path | imagefullurl"
+          alt="campaign image"
+        />
 
         <q-card-section>
           <div

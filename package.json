@@ -2,7 +2,7 @@
   "name": "daguad_frontend",
   "version": "0.0.1",
   "description": "A Quasar Framework app",
-  "productName": "Quasar App",
+  "productName": "Dagu Ads",
   "author": "Siraj Yesuf <sirajyesuf762@gmail.com>",
   "private": true,
   "scripts": {

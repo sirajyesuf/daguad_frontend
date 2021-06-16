@@ -133,6 +133,7 @@
             v-for="catagory in catagories.slice(0, seemore_catagory)"
             :key="catagory.title"
           >
+            {{ selectedcatagories }}
             <category-selection-step
               :catagory="catagory"
               @catagoryselected="$emit('catagoryselected', catagory.id)"
