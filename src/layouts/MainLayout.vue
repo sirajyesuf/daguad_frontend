@@ -1,15 +1,14 @@
 <template>
-  <q-layout view="hhr LpR fff">
+  <q-layout view="hHh lpR fFf">
     <q-header class="bg-white">
       <q-toolbar>
         <q-btn
           color="primary"
-          flat
           dense
+          flat
           round
-          :icon="icon"
-          aria-label="Menu"
-          @click="leftDrawerOpen = !leftDrawerOpen"
+          icon="menu"
+          @click="left = !left"
         />
 
         <q-toolbar-title>
@@ -47,8 +46,9 @@
     </q-header>
 
     <q-drawer
-      v-model="leftDrawerOpen"
       show-if-above
+      v-model="left"
+      side="left"
       bordered
       content-class="bg-white"
     >
@@ -117,6 +117,8 @@ export default {
   components: { EssentialLink, Notifications },
   data() {
     return {
+      left: false,
+
       leftDrawerOpen: false,
       essentialLinks: linksData,
       unreadnotifications: []
@@ -137,7 +139,7 @@ export default {
           console.log(response)
           this.unreadnotifications = response.data
         }
-      }, 5000)
+      }, 10000)
     },
     async Markasreadnotifications() {
       await this.$api.get('notifications/read_notification')

@@ -2,10 +2,10 @@
   <q-card class="no-shadow">
     <q-card-section class="bg-primary text-white">
       <div class="text-h6">Notifications</div>
-      <div class="text-subtitle2">All Notifications2</div>
+      <div class="text-subtitle2">All Notifications</div>
     </q-card-section>
     <q-card-section>
-      <q-list bordered separator>
+      <q-list bordered separator v-if="readnotifications.length !== 0">
         <q-item
           v-for="(notification, index) in readnotifications"
           :key="index"
@@ -25,8 +25,9 @@
           </q-item-section>
         </q-item>
       </q-list>
+      <p v-else>zero notifications</p>
     </q-card-section>
-    <q-section-action>
+    <q-section-action v-if="readnotifications.length !== 0">
       <div class="q-pa-lg flex flex-center">
         <q-pagination
           v-model="current"

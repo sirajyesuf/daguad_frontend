@@ -16,7 +16,7 @@
           color="primary"
           :no-caps="true"
           :label="report.btn"
-          to="/dashboard/channels"
+          :to="url(report.title.toLowerCase())"
         ></q-btn>
       </q-card-actions>
     </q-card>
@@ -39,14 +39,17 @@ export default {
       const response = await this.$api.get('dashboard_report')
       console.log('dashboard reports', response)
       this.dashboardreport = response.data
+    },
+    url(title) {
+      if (title.includes('Earning'.toLowerCase())) return { name: 'earning' }
+      if (title.includes('Campaign'.toLowerCase()))
+        return { name: 'campaign_list' }
+      if (title.includes('channel'.toLowerCase()))
+        return { name: 'list_channel' }
     }
-  }
+  },
+  computed: {}
 }
 </script>
 
-<style lang="css" scoped>
-/* .my-card {
-  width: 100%;
-  max-width: 500px;
-} */
-</style>
+<style lang="css" scoped></style>
