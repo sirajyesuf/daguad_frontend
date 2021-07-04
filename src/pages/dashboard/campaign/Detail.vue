@@ -91,7 +91,7 @@
             <q-item-section>
               <q-item-label class="text-teal">Starting Date</q-item-label>
               <q-item-label caption>
-                {{ campaign.starting_date }}
+                {{ new Date(campaign.starting_date).toLocaleDateString() }}
               </q-item-label>
             </q-item-section>
           </q-item>

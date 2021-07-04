@@ -60,7 +60,8 @@ const actions = {
 }
 const getters = {
   isauth(state) {
-    return state.token !== null
+    if (state.token !== null) return true
+    else return false
   },
   token(state) {
     return state.token

@@ -17,7 +17,12 @@
       <div class="menu-extras" v-if="!isauth">
         <div class="menu-item">
           <!-- Mobile menu toggle-->
-          <a class="navbar-toggle" id="isToggle" onclick="toggleMenu()">
+          <a
+            class="navbar-toggle"
+            id="isToggle"
+            onclick="toggleMenu()"
+            v-if="$q.screen.lt.lg"
+          >
             <div class="lines">
               <span></span>
               <span></span>

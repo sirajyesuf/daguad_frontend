@@ -32,6 +32,7 @@
         <q-card-actions vertical class="q-mt-xl">
           <q-btn
             color="grey"
+            label="see more"
             round
             flat
             dense

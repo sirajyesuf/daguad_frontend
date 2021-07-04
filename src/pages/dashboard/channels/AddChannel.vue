@@ -29,7 +29,7 @@
               text-color="black"
               no-caps
               unelevated
-              label="@daguadsbot"
+              label="dagu_ads_bot"
               @click="copytoclibboard"
             />
 
@@ -123,7 +123,7 @@ export default {
     },
 
     copytoclibboard() {
-      copyToClipboard('@daguadsbot').then(() => {
+      copyToClipboard('dagu_ads_bot').then(() => {
         this.$q.notify({
           position: 'center',
           message: 'the user name is copy to the clip board',

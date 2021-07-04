@@ -8,7 +8,11 @@
       </li>
 
       <li class="list-inline-item">
-        <a href="#" class="rounded mx-1" target="_blank">
+        <a
+          href="https://twitter.com/sirajyesuf0"
+          class="rounded mx-1"
+          target="_blank"
+        >
           <i class="fab fa-twitter"></i>
         </a>
       </li>

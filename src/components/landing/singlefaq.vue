@@ -9,7 +9,7 @@
         :aria-expanded="faq.id === 'One' ? true : false"
         :aria-controls="`collapse${faq.id}`"
       >
-        {{ faq.que }} ?
+        {{ faq.que }}
       </button>
     </h2>
     <div

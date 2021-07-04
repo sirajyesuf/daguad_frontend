@@ -1,7 +1,7 @@
 <template>
   <q-card class="shadow-15">
     <q-bar class="bg-white" v-if="view === 'mobile'">
-      <q-btn flat icon="close" v-close-popup color="grey" class="q-mt-mb">
+      <q-btn flat icon="close" v-close-popup color="red" class="q-mt-mb">
         <q-tooltip>Close</q-tooltip>
       </q-btn>
     </q-bar>
@@ -45,7 +45,10 @@
     </div>
 
     <q-card-section class="q-pt-none">
-      <div v-html="message"></div>
+      <article
+        v-html="message"
+        :class="{ message_mobile: $q.screen.lt.md, message: $q.screen.gt.sm }"
+      ></article>
     </q-card-section>
   </q-card>
 </template>
@@ -57,5 +60,10 @@ export default {
 <style scoped>
 .campaign_image {
   width: 100%;
+}
+.message {
+  width: 100%;
+}
+.message_mobile {
 }
 </style>

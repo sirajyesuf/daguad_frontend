@@ -83,6 +83,11 @@
             </template>
           </tbody>
         </q-markup-table>
+        <template v-if="Object.keys(data).length === 0">
+          <p class="text-info text-center q-ma-sm">
+            you did n't make any money🙄
+          </p>
+        </template>
       </div>
     </div>
   </div>

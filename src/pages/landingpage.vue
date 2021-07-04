@@ -36,8 +36,6 @@ export default {
     'app-happyclient': require('components/landing/Happyclient.vue').default,
     'app-faq': require('components/landing/FAQ.vue').default,
     'app-footer': require('components/landing/Footer.vue').default,
-    // 'app-channelcatagory': require('components/landing/Channelcatagory.vue')
-    //   .default,
     'app-haveaquestion': require('components/landing/Havequestion.vue').default
   }
 }

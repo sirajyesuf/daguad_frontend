@@ -18,7 +18,7 @@
       </p>
 
       <p class="q-mt-none text-subtitle3 text-muted">
-        {{ new Date(notification.created_at).toLocaleString() }}
+        {{ notification.created_at | fromNow }}
       </p>
     </q-card-actions>
   </q-card>

@@ -10,26 +10,18 @@
         <div class="row align-items-center">
           <div class="col-lg-6 col-md-6">
             <div class="title-heading mt-4">
-              <!--
-              <div class="alert alert-light alert-pills shadow" role="alert">
-                <span class="badge rounded-pill bg-danger me-1">v3.0.0</span>
-                <span class="content">
-                  Build <span class="text-primary">anything</span> you want -
-                  Landrick.</span
-                >
-              </div> -->
-              <h1 class="heading mb-0">
-                <span class="text-primary">Ethiopia's</span>
-                <span class="text-yellow"> Premium</span>
+              <h6 class="heading mb-0">
+                <span class="text-primary mb-0">Effective advertising</span>
                 <br />
-                <span class="text-primary">
-                  Telegram advertizement Provider</span
-                >
+                <span class="mb-0"> <b class="trusted">in trusted</b></span>
+                <br />
+                <span class="text-primary mb-0"> Telegram channels</span>
                 <span class="text-orange">.</span>
-              </h1>
+              </h6>
               <p class="para-desc text-muted">
-                Launch your campaign and get more customers <br />
-                Earn money by registering your telegram channel.
+                We help to find the target audience in Telegram and launch
+                effective advertising campaigns<br />
+                Earn money by registering your active telegram channel.
               </p>
               <div class="row">
                 <div class="col mt-4 pt-2" v-if="!isauth">
@@ -71,3 +63,10 @@ export default {
   }
 }
 </script>
+<style scoped>
+.trusted {
+  color: white;
+  background-color: #fbb040;
+  border-radius: 6px;
+}
+</style>

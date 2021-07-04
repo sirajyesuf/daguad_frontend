@@ -9,7 +9,6 @@
           transaction number to verify.
           <br />
           <router-link
-            href="#"
             class="text-primary"
             :to="{ name: 'campaign-detail', params: { id: campaign.id } }"
           >
@@ -17,18 +16,15 @@
           </router-link>
         </p>
       </div>
-      {{ paymentmethods }}
       <div class="row q-col-gutter-sm q-ma-sm">
         <div
           class="col-xs-6 col-sm-4 col-md-3"
           v-for="payment in paymentmethods"
           :key="payment.id"
         >
-          {{ payment.logo_path }}
-
           <q-avatar square size="100px" class="shadow-3">
             <img
-              :src="payment.logo_path"
+              :src="payment.logo_path | paymentImagepath"
               class="paymet"
               @click="selectedpaymet(payment.id)"
               alt="payment method logo"
@@ -123,6 +119,7 @@ export default {
   methods: {
     async fetchcampaign() {
       await this.$api.get(`campaigns/${this.$route.params.id}`).then((res) => {
+        console.log('cam', res)
         this.campaign = res.data
       })
       await this.$store.dispatch('payment/paymentmethod')

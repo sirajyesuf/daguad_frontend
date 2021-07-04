@@ -1,3 +1,0 @@
-// // :error=" // errors.editor_err === true // ? true // : !!message // ? false //
-// : message.length < 20 || message.length > 300 // ? true // : false // " //
-// :done="message.length >= 20 && message.length <= 300 ? true : false"

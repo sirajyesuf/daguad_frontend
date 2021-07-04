@@ -20,7 +20,7 @@
 
           <q-item-section side top>
             <q-item-label caption class="text-muted text-green">
-              {{ new Date(notification.created_at).toLocaleString() }}
+              {{ notification.created_at | fromNow }}
             </q-item-label>
           </q-item-section>
         </q-item>

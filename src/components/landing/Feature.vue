@@ -82,7 +82,7 @@ export default {
           title: 'Great Support.',
           icon: 'far fa-life-ring',
           description:
-            'We are here anytime you need help 24/7/365 to assist you with any aspect of your experience with our service.'
+            'We are here anytime you need help 24/7 to assist you with any aspect of your experience with our service.'
         },
         {
           title: 'Easy to use.',

@@ -12,7 +12,7 @@
           :class="{ selectedpayment: payment.selected }"
           @click="selectedPaymentMethod(payment)"
         >
-          <img class="paymet" :src="payment.logo_path" />
+          <img class="paymet" :src="payment.logo_path | paymentImagepath" />
         </q-avatar>
       </div>
     </div>
@@ -127,8 +127,6 @@ export default {
 </script>
 <style scoped>
 .selectedpayment {
-  border-color: red;
-  border-width: 1px;
-  border-style: solid;
+  border: 5px solid green;
 }
 </style>

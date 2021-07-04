@@ -131,9 +131,8 @@
             <h4 class="mb-4">Contact Details</h4>
             <p class="text-muted">
               Start working with
-              <span class="text-primary fw-bold">Landrick</span> that can
-              provide everything you need to generate awareness, drive traffic,
-              connect.
+              <span class="text-primary fw-bold">Dagu Ads</span> that can
+              provide audience for your bussiness.
             </p>
             <div class="d-flex contact-detail align-items-center mt-3">
               <div class="icon">

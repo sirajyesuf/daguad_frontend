@@ -2,6 +2,7 @@ const routes = [
   {
     path: '/account',
     component: () => import('layouts/AccountMainLayout.vue'),
+    meta: { guest: true },
     children: [
       {
         path: 'signup',

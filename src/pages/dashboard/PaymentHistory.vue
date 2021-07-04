@@ -156,7 +156,9 @@
                         animation="blink"
                         type="rect"
                       />
-                      <span v-else> {{ cpayment.payment }} </span>
+                      <span v-else>
+                        {{ cpayment.payment.payment_method }}
+                      </span>
                     </td>
                     <td class="text-left">
                       <q-skeleton
@@ -170,7 +172,7 @@
                 </template>
               </tbody>
             </q-markup-table>
-            <template>
+            <template v-if="cpayments.data.length == 0">
               <p class="text-info text-center q-ma-sm">
                 zero campaign payment history 🙄
               </p>
@@ -225,10 +227,8 @@ export default {
       this.cpayments.meta.total / this.cpayments.meta.per_page
     )
     console.log('nnnnnnn', this.epayments, this.emax, this.cpayments, this.cmax)
-    setTimeout(() => {
-      this.eloading = false
-      this.cloading = false
-    }, 5000)
+    this.eloading = false
+    this.cloading = false
   },
   methods: {
     async fetchEarningPayment(url = null) {
@@ -251,9 +251,7 @@ export default {
       const response = await this.fetchEarningPayment(url)
       this.epayments = response.data
       console.log('pagination', this.epayments)
-      setTimeout(() => {
-        this.eloading = false
-      }, 5000)
+      this.eloading = false
     },
     async fetchcPayment() {
       this.cloading = true
@@ -261,9 +259,7 @@ export default {
       const response = await this.fetchCampaignPayment(url)
       this.cpayments = response.data
       console.log('pagination', this.cpayments)
-      setTimeout(() => {
-        this.cloading = false
-      }, 5000)
+      this.cloading = false
     }
   }
 }

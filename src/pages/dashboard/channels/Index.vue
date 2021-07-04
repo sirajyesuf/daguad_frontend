@@ -24,7 +24,9 @@
           <th class="text-left">#</th>
           <th class="text-left">Name <i class="fas fa-bullhorn"></i></th>
           <th class="text-left">Catagory <i class="fas fa-folder"></i></th>
-          <th class="text-center">Avgview/day <i class="far fa-eye"></i></th>
+          <th class="text-center">
+            Average View per Day <i class="far fa-eye"></i>
+          </th>
           <th class="text-center">Subscribers <i class="fas fa-heart"></i></th>
           <th class="text-center">
             Status <i class="fas fa-battery-three-quarters"></i>
@@ -92,9 +94,7 @@
       </tbody>
     </q-markup-table>
     <template v-if="channels.length === 0">
-      <p class="text-info text-center q-ma-sm">
-        zero channel payment history 🙄
-      </p>
+      <p class="text-info text-center q-ma-sm">zero channel is created 🙄</p>
     </template>
     <div v-if="channels.length !== 0" class="q-pa-lg flex flex-center">
       <q-pagination @input="atInput" :max="max" :value="current" input />

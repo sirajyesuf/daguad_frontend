@@ -42,26 +42,22 @@ export default {
       faqs: [
         {
           id: 'One',
-          que: 'How can i  earn money as a telegram channel owner',
+          que: 'How to Start Earning Money As a Telegram Channel owner.',
           ans:
-            'if you have active telegram channel just register  your telegram channel and we post advert on your channel then we pay per post.simple as it is.'
+            'First.you need to add channel.To do this,sign up and fill out an application to add a channel.Your channel will be approved and assigned for catagories with in a day and the channel is ready for advertisement. '
         },
         {
           id: 'Two',
-          que: 'How can i launch campaign',
-          ans: 'first signup and order your campaign with simple steps'
-        },
-        {
-          id: 'Three',
-          que: 'How can i pay for my campaign',
+          que: 'What channels do we accept.',
           ans:
-            'first signin and from the dashboard click the campaign button  then from the list  select your campaign and click the paycampaign  button then from the list available payment methods select and pay using the given information  finally verify your paymnet using the  transaction number.'
+            'Your channel must have at least 50,000 subscribers.We also check the validity of subscribers, the absence of bots in the channel,and various methods of cheating.'
         },
+
         {
-          id: 'four',
-          que: 'How can i create account on Dagu Ads',
+          id: 'Five',
+          que: 'Do I need to pay for Registering My Telegram Channel.',
           ans:
-            'to create account first click the SignUp button and then full fill all the required information.finally click the submit button.'
+            "Channel owners don't pay for incoming ads.Right now you can add a channel for free and start making money."
         }
       ]
     }

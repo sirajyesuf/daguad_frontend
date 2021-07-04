@@ -30,7 +30,7 @@
         <img :src="photo" class="campaign_image" />
       </div>
       <div class="">
-        <p v-html="message" class=""></p>
+        <p v-html="message" class="message"></p>
       </div>
     </q-card-section>
   </q-card>
@@ -43,5 +43,8 @@ export default {
 <style scoped>
 .campaign_image {
   width: 100%;
+}
+.message {
+  height: 300px;
 }
 </style>

@@ -1,7 +1,7 @@
 {
   "name": "daguad_frontend",
   "version": "0.0.1",
-  "description": "A Quasar Framework app",
+  "description": "Ethiopia based telegram advertisement provider",
   "productName": "Dagu Ads",
   "author": "Siraj Yesuf <sirajyesuf762@gmail.com>",
   "private": true,
@@ -13,6 +13,7 @@
     "@quasar/extras": "^1.0.0",
     "axios": "^0.21.1",
     "core-js": "^3.6.5",
+    "moment": "^2.29.1",
     "quasar": "^1.0.0",
     "v-calendar": "^2.3.0"
   },

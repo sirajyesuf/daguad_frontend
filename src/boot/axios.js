@@ -32,21 +32,18 @@ export default async ({ app, router, Vue, store }) => {
       // Any status code that lie within the range of 2xx cause this function to trigger
       // Do something with response data
       store.commit('common/update', false)
-      setTimeout(() => {
-        DisplayLoading(0)
-      }, 1000)
+      DisplayLoading(0)
       return response
     },
     function (error) {
       // Any status codes that falls outside the range of 2xx cause this function to trigger
       // Do something with response error
       store.commit('common/update', false)
-      setTimeout(() => {
-        DisplayLoading(0)
-      }, 1000)
+      DisplayLoading(0)
+
       const statuscode = error.response.status
       console.log('status_code', statuscode)
-      // if (statuscode === 500) router.push({ name: '500' })
+      if (statuscode === 500) router.push({ name: '500' })
       if (statuscode === 403) router.push({ name: '403' })
       if (statuscode === 401) {
         store.commit('user/signout')
